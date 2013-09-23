@@ -7,8 +7,8 @@ public class ColumnItem {
 
 	private String name;
 	private String alias;
-	private String indexTableName;
-	private String indexColumnName;
+	private String relationTableName;
+	private String relationColumnName;
     private Boolean primaryKey;
 
 	public ColumnItem() {
@@ -30,20 +30,20 @@ public class ColumnItem {
 		this.alias = alias;
 	}
 
-	public String getIndexTableName() {
-		return indexTableName;
+	public String getRelationTableName() {
+		return relationTableName;
 	}
 
-	public void setIndexTableName(String indexTableName) {
-		this.indexTableName = indexTableName;
+	public void setRelationTableName(String relationTableName) {
+		this.relationTableName = relationTableName;
 	}
 
-	public String getIndexColumnName() {
-		return indexColumnName;
+	public String getRelationColumnName() {
+		return relationColumnName;
 	}
 
-	public void setIndexColumnName(String indexColumnName) {
-		this.indexColumnName = indexColumnName;
+	public void setRelationColumnName(String relationColumnName) {
+		this.relationColumnName = relationColumnName;
 	}
 
     public Boolean getPrimaryKey() {
@@ -59,8 +59,8 @@ public class ColumnItem {
         return new HashCodeBuilder()
                 .append(this.name)
                 .append(this.alias)
-                .append(this.indexTableName)
-                .append(this.indexColumnName)
+                .append(this.relationTableName)
+                .append(this.relationColumnName)
                 .append(this.primaryKey)
                 .toHashCode();
     }
@@ -75,8 +75,8 @@ public class ColumnItem {
         return new EqualsBuilder()
                 .append(this.name, otherObj.name)
                 .append(this.alias, otherObj.alias)
-                .append(this.indexTableName, otherObj.indexTableName)
-                .append(this.indexColumnName, otherObj.indexColumnName)
+                .append(this.relationTableName, otherObj.relationTableName)
+                .append(this.relationColumnName, otherObj.relationColumnName)
                 .append(this.primaryKey, otherObj.primaryKey)
                 .isEquals();
     }

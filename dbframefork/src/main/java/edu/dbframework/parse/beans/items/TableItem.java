@@ -17,6 +17,9 @@ public class TableItem {
 	
 	private String name;
 	private List<ColumnItem> columns = new ArrayList<ColumnItem>();
+
+    public TableItem() {
+    }
 	
 	public List<ColumnItem> getColumns() {
 		return columns;
@@ -26,9 +29,6 @@ public class TableItem {
 		this.columns = columns;
 	}
 
-	public TableItem() {
-	}
-	
 	public void addColumn(ColumnItem column) {
 		columns.add(column);
 	}
@@ -41,7 +41,36 @@ public class TableItem {
 		this.name = name;
 	}
 
-    public Map<String, ColumnItem> createColumnsMap() {
+    public List<String> getRelationTables() {
+        List<String> relTables = new ArrayList<String>();
+        relTables.add(this.getName());
+        for (ColumnItem columnItem : columns) {
+            if (columnItem.getRelationTableName() == null) {
+                relTables.add(columnItem.getRelationTableName());
+            }
+        }
+        return relTables;
+    }
+
+    public String[] getRelationColumns() {
+        List<String> relColumns = new ArrayList<String>();
+        for (ColumnItem columnItem : columns) {
+            if (columnItem.getRelationTableName() == null && columnItem.getRelationColumnName() != null) {
+                relColumns.add(columnItem.getRelationTableName() + "." + columnItem.getRelationColumnName());
+            }
+        }
+        return relColumns.toArray(new String[relColumns.size()]);
+    }
+
+    public String[] columnsAsArray() {
+        String[] colArray = new String[columns.size()];
+        for (int i = 0; i < columns.size(); i++) {
+            colArray[i] = this.getName() + "." + columns.get(i).getName();
+        }
+        return colArray;
+    }
+
+    public Map<String, ColumnItem> columnsAsMap() {
         HashMap<String, ColumnItem> columnsMap = new HashMap<String, ColumnItem>();
         for (ColumnItem columnItem : columns) {
             columnsMap.put(columnItem.getName(), columnItem);

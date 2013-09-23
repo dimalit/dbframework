@@ -62,8 +62,8 @@ public class DatabaseBeanHelper {
         Map<String, ColumnItem> extReferenceTables = new HashMap<String, ColumnItem>();
         for (TableItem tableItem: databaseXMLBean.getTables()) {
             for (ColumnItem columnItem : tableItem.getColumns()) {
-                if (columnItem.getIndexTableName() != null) {
-                    if (columnItem.getIndexTableName().equals(tableName)) {
+                if (columnItem.getRelationTableName() != null) {
+                    if (columnItem.getRelationTableName().equals(tableName)) {
                         extReferenceTables.put(tableItem.getName(), columnItem);
                         break;
                     }
