@@ -1,6 +1,6 @@
 package edu.dbframework.service;
 
-import edu.dbframework.database.DataUtils;
+import edu.dbframework.database.Dao;
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseBeanHelper;
@@ -17,10 +17,10 @@ import java.util.Map;
  */
 public class DatabaseService {
 
-    private DataUtils dataUtils;
+    private Dao dao;
 
     public DatabaseService() {
-        this.dataUtils = new DataUtils();
+        this.dao = new Dao();
     }
 
     public Map<String, List<String>> getDataForTableItem(TableItem tableItem) {
@@ -28,9 +28,9 @@ public class DatabaseService {
         DatabaseBeanHelper databaseBeanHelper = new DatabaseBeanHelper();
         Map<String, ColumnItem> extRefTables = databaseBeanHelper.getExternalReferencesForTable(tableItem.getName());
         if (extRefTables.size() > 0)
-            data = dataUtils.getData(tableItem, extRefTables);
+            data = dao.getData(tableItem, extRefTables);
         else
-            data = dataUtils.getData(tableItem);
+            data = dao.getData(tableItem);
         return data;
     }
 }

@@ -41,28 +41,28 @@ public class TableItem {
 		this.name = name;
 	}
 
-    public List<String> getRelationTables() {
+    public List<String> relationTablesAsList() {
         List<String> relTables = new ArrayList<String>();
         relTables.add(this.getName());
         for (ColumnItem columnItem : columns) {
-            if (columnItem.getRelationTableName() == null) {
+            if (columnItem.getRelationTableName() != null) {
                 relTables.add(columnItem.getRelationTableName());
             }
         }
         return relTables;
     }
 
-    public String[] getRelationColumns() {
+    public String[] relationColumnsAsStringArray() {
         List<String> relColumns = new ArrayList<String>();
         for (ColumnItem columnItem : columns) {
-            if (columnItem.getRelationTableName() == null && columnItem.getRelationColumnName() != null) {
+            if (columnItem.getRelationTableName() != null && columnItem.getRelationColumnName() != null) {
                 relColumns.add(columnItem.getRelationTableName() + "." + columnItem.getRelationColumnName());
             }
         }
         return relColumns.toArray(new String[relColumns.size()]);
     }
 
-    public String[] columnsAsArray() {
+    public String[] columnsAsStringArray() {
         String[] colArray = new String[columns.size()];
         for (int i = 0; i < columns.size(); i++) {
             colArray[i] = this.getName() + "." + columns.get(i).getName();

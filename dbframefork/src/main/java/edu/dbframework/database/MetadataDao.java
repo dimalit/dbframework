@@ -16,13 +16,13 @@ import edu.dbframework.parse.beans.items.TableItem;
  * @author GreenPoser
  * 
  */
-public class MetadataUtils {
+public class MetadataDao {
 
 	public final static String TABLE_TYPE = "TABLE";
 	public final static String VIEW_TYPE = "VIEW";
 	public final static String COLUMN = "COLUMN_NAME";
 
-	public MetadataUtils() {
+	public MetadataDao() {
 	}
 
 	public List<String> getTables() {
@@ -41,14 +41,14 @@ public class MetadataUtils {
 				tables.add(resultSet.getString("TABLE_NAME"));
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Exception in MetadataUtils.getTables",
+			throw new RuntimeException("Exception in MetadataDao.getTables",
 					e.getCause());
 		} finally {
 			try {
 				resultSet.close();
 			} catch (SQLException e) {
 				throw new RuntimeException(
-						"Exception in MetadataUtils.getTables", e.getCause());
+						"Exception in MetadataDao.getTables", e.getCause());
 			}
 			ConnectionUtils.closeConnection();
 		}
@@ -72,13 +72,13 @@ public class MetadataUtils {
 				views.add(resultSet.getString("TABLE_NAME"));
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Exception in MetadataUtils.getViews", e.getCause());
+			throw new RuntimeException("Exception in MetadataDao.getViews", e.getCause());
 		} finally {
 			try {
 				resultSet.close();
 			} catch (SQLException e) {
 				throw new RuntimeException(
-						"Exception in MetadataUtils.getViews", e.getCause());
+						"Exception in MetadataDao.getViews", e.getCause());
 			}
 			ConnectionUtils.closeConnection();
 		}
@@ -99,13 +99,13 @@ public class MetadataUtils {
 				columns.add(resultSet.getString(COLUMN));
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException("Exception in MetadataUtils.getViews", e.getCause());
+			throw new RuntimeException("Exception in MetadataDao.getViews", e.getCause());
 		} finally {
 			try {
 				resultSet.close();
 			} catch (SQLException e) {
 				throw new RuntimeException(
-						"Exception in MetadataUtils.getColumns", e.getCause());
+						"Exception in MetadataDao.getColumns", e.getCause());
 			}
 			ConnectionUtils.closeConnection();
 		}
@@ -150,14 +150,14 @@ public class MetadataUtils {
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(
-					"Exception in MetadataUtils.getPrimaryKeyColumns", e.getCause());
+					"Exception in MetadataDao.getPrimaryKeyColumns", e.getCause());
 		} finally {
 			ConnectionUtils.closeConnection();
 			try {
 				resultSet.close();
 			} catch (SQLException e) {
 				throw new RuntimeException(
-						"Exception in MetadataUtils.getPrimaryKeyColumns", e.getCause());
+						"Exception in MetadataDao.getPrimaryKeyColumns", e.getCause());
 			}
 		}
 		return primaryKeyColumns;
