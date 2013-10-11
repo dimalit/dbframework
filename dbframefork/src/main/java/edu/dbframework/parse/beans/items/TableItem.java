@@ -41,17 +41,6 @@ public class TableItem {
 		this.name = name;
 	}
 
-    public List<String> relationTablesAsList() {
-        List<String> relTables = new ArrayList<String>();
-        relTables.add(this.getName());
-        for (ColumnItem columnItem : columns) {
-            if (columnItem.getRelationTableName() != null) {
-                relTables.add(columnItem.getRelationTableName());
-            }
-        }
-        return relTables;
-    }
-
     public String[] relationColumnsAsStringArray() {
         List<String> relColumns = new ArrayList<String>();
         for (ColumnItem columnItem : columns) {
@@ -60,6 +49,26 @@ public class TableItem {
             }
         }
         return relColumns.toArray(new String[relColumns.size()]);
+    }
+
+    public List<ColumnItem> columnsWithRelationsAsList() {
+        List<ColumnItem> relColumns = new ArrayList<ColumnItem>();
+        for (ColumnItem columnItem : columns) {
+            if (columnItem.getRelationTableName() != null && columnItem.getRelationColumnName() != null) {
+                relColumns.add(columnItem);
+            }
+        }
+        return relColumns;
+    }
+
+    public Map<String, String> relationColumnsAsMap() {
+        HashMap<String, String> columns = new HashMap<String, String>();
+        for (ColumnItem columnItem : this.columns) {
+            if (columnItem.getRelationTableName() != null && columnItem.getRelationColumnName() != null) {
+                columns.put(columnItem.getRelationTableName(), columnItem.getRelationColumnName());
+            }
+        }
+        return columns;
     }
 
     public String[] columnsAsStringArray() {

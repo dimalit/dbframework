@@ -3,7 +3,7 @@ package edu.dbframework.parse.helpers;
 import edu.dbframework.parse.beans.DatabaseXMLBean;
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
-import edu.dbframework.parse.parsers.DatabaseBeanParser;
+import edu.dbframework.parse.parsers.AbstractParser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,13 +22,13 @@ public class DatabaseBeanHelper {
 
     private File parsingFile;
     private DatabaseXMLBean databaseXMLBean;
-    private DatabaseBeanParser databaseBeanParser;
+    private AbstractParser parser;
 
     public DatabaseBeanHelper() {
-        databaseBeanParser = new DatabaseBeanParser("database.xml");
-        this.parsingFile = databaseBeanParser.getParsingFile();
+        parser = new AbstractParser("database.xml");
+        this.parsingFile = parser.getParsingFile();
         if (parsingFile.exists())
-            this.databaseXMLBean = databaseBeanParser.getBeanFromXML();
+            this.databaseXMLBean = (DatabaseXMLBean) parser.getBeanFromXML(DatabaseXMLBean.class);
     }
 
     public DatabaseBeanHelper(File parsingFile) {
@@ -36,13 +36,13 @@ public class DatabaseBeanHelper {
     }
 
     public DatabaseXMLBean getDatabaseXMLBean() {
-        if (!databaseBeanParser.getBeanFromXML().equals(this.databaseXMLBean))
-            this.databaseXMLBean = databaseBeanParser.getBeanFromXML();
+        if (!parser.getBeanFromXML().equals(this.databaseXMLBean))
+            this.databaseXMLBean = (DatabaseXMLBean) parser.getBeanFromXML(DatabaseXMLBean.class);
         return databaseXMLBean;
     }
 
     public void setDatabaseXMLBean(DatabaseXMLBean databaseXMLBean) {
-        this.databaseBeanParser.addBeanToXML(databaseXMLBean);
+        this.parser.addBeanToXML(databaseXMLBean);
         this.databaseXMLBean = databaseXMLBean;
     }
 

@@ -1,12 +1,19 @@
 package edu.dbframework;
 
-import com.healthmarketscience.sqlbuilder.BinaryCondition;
-import com.healthmarketscience.sqlbuilder.SelectQuery;
-import edu.dbframework.database.MetadataDao;
-import edu.dbframework.parse.beans.ConnectionXMLBean;
+import edu.dbframework.database.ConnectionUtils;
+import edu.dbframework.database.Dao;
+import edu.dbframework.database.SqlQueryBuilder;
 import edu.dbframework.parse.beans.DatabaseXMLBean;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.parsers.AbstractParser;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +23,7 @@ import edu.dbframework.parse.parsers.AbstractParser;
  * To change this template use File | Settings | File Templates.
  */
 public class WorkMain {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         /*ConnectionXMLBean bean = new ConnectionXMLBean();
         bean.setDriver("com.mysql.jdbc.Driver");
@@ -36,16 +43,22 @@ public class WorkMain {
         DatabaseXMLBean xmlBean = (DatabaseXMLBean)ap.getBeanFromXML(DatabaseXMLBean.class);
         TableItem ti = xmlBean.getTables().get(1);
 
-        SelectQuery query = new SelectQuery().addCustomColumns(ti.columnsAsStringArray());
-        query.addCustomColumns(ti.relationColumnsAsStringArray());
+        SqlQueryBuilder sqb = new SqlQueryBuilder();
 
-        for (String fromTable : ti.relationTablesAsList()) {
-            query.addCustomFromTable(fromTable);
-        }
 
-        query.addCustomJoin(SelectQuery.JoinType.INNER, ti.getName(), ti.getName(), BinaryCondition.equalTo(ti.getColumns().get(0), ti.getColumns().get(1)));
-        System.out.print(query);
+        // --------- test query for table item
+        //System.out.print(sqb.buildQueryForTableItem(ti));
 
+
+        // --------- test query by rows
+        /*List<String> rows = new ArrayList<String>();
+        rows.add("lol");
+        rows.add("ppwwppw");
+
+        System.out.print(sqb.buildQueryByRows(ti, rows, ti.getColumns().get(1), "relTable"));*/
+
+        Dao dao = new Dao();
+        System.out.print(dao.getData(sqb.buildQueryForTableItem(ti)));
     }
 }
 

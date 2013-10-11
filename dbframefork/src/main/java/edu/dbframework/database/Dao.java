@@ -2,10 +2,12 @@ package edu.dbframework.database;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +23,7 @@ public class Dao {
     public Dao() {
     }
 
-    public Map<String, List<String>> getData(String table) {
+    /*public Map<String, List<String>> getData(String table) {
         ResultSet resultSet = null;
         Statement statement = null;
         Connection connection = null;
@@ -65,14 +67,14 @@ public class Dao {
             ConnectionUtils.closeConnection();
         }
         return data;
-    }
+    }*/
 
     public Map<String, List<String>> getData(TableItem tableItem) {
         ResultSet resultSet = null;
         Statement statement = null;
         Connection connection = null;
         Map<String, List<String>> data = null;
-        String query = sqlQueryBuilder.createQuery(tableItem);
+        String query = sqlQueryBuilder.buildQueryForTableItem(tableItem);
         try {
             connection = ConnectionUtils.getConnection();
             statement = connection.createStatement();
@@ -101,7 +103,7 @@ public class Dao {
         Statement statement = null;
         Connection connection = null;
         Map<String, List<String>> data = null;
-        String query = sqlQueryBuilder.createQuery(tableItem, primaryKey, indexColumn);
+        String query = sqlQueryBuilder.buildQueryByRelationColumn(tableItem, primaryKey, indexColumn);
         try {
             connection = ConnectionUtils.getConnection();
             statement = connection.createStatement();
@@ -144,7 +146,7 @@ public class Dao {
         Statement statement = null;
         Connection connection = null;
         Map<String, List<String>> data = null;
-        String query = sqlQueryBuilder.createQuery(tableItem, links, column, table);
+        String query = sqlQueryBuilder.buildQueryByRows(tableItem, links, column, table);
         try {
             connection = ConnectionUtils.getConnection();
             statement = connection.createStatement();
@@ -172,12 +174,12 @@ public class Dao {
         return data;
     }
 
-    public Map<String,List<String>> getData(TableItem tableItem, Map<String, ColumnItem> extRefTables) {
+   /* public Map<String,List<String>> getData(TableItem tableItem, Map<String, ColumnItem> extRefTables) {
         ResultSet resultSet = null;
         Statement statement = null;
         Connection connection = null;
         Map<String, List<String>> data = null;
-        String query = sqlQueryBuilder.createQuery(tableItem, extRefTables);
+        String query = sqlQueryBuilder.buildQueryByRelationColumn(tableItem, extRefTables);
         try {
             connection = ConnectionUtils.getConnection();
             statement = connection.createStatement();
@@ -207,25 +209,35 @@ public class Dao {
                     "Exception in Dao.getData(tableItem)", e.getCause());
         }
         return data;
-    }
+    }*/
 
-    public String createQuery(TableItem tableItem) {
+    public Map<String, List<String>> getData(String query) {
+        ResultSet resultSet = null;
+        Statement statement = null;
+        Connection connection = null;
+        Map<String, List<String>> data = null;
 
-        return sqlQueryBuilder.createQuery(tableItem);
-    }
+        try {
+            connection = ConnectionUtils.getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query.toString());
+            data = new LinkedHashMap<String, List<String>>();
 
-    public String createQuery(TableItem tableItem, List<String> links, ColumnItem column, String referTable) {
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+            int columnsCount = rsmd.getColumnCount();
 
-        return sqlQueryBuilder.createQuery(tableItem, links, column, referTable);
-    }
-
-    public String createQuery(TableItem tableItem, String primaryKey, String indexColumn) {
-
-        return sqlQueryBuilder.createQuery(tableItem, primaryKey, indexColumn);
-    }
-
-    public String createQuery(TableItem tableItem, Map<String, ColumnItem> extRefTables) {
-
-        return sqlQueryBuilder.createQuery(tableItem, extRefTables);
+            for (int i = 1; i <= columnsCount; i++) {
+                ArrayList<String> colData = new ArrayList<String>();
+                while (resultSet.next()) {
+                    colData.add(resultSet.getString(i));
+                }
+                data.put(rsmd.getColumnLabel(i), colData);
+                resultSet.beforeFirst();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Exception in Dao.getData(tableItem)", e.getCause());
+        }
+       return data;
     }
 }
