@@ -4,11 +4,33 @@
     <groupId>edu.hnu</groupId>
     <artifactId>dbframefork</artifactId>
     <version>0.0.1</version>
+
+    <properties>
+        <commons.betwixt.version>0.8</commons.betwixt.version>
+        <spring-jdbc.version>3.2.4.RELEASE</spring-jdbc.version>
+        <sqlbuilder.version>2.0.0</sqlbuilder.version>
+        <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+        <gui.project.path>C:\Users\bondarets\diplom\gui-swing\lib</gui.project.path>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <outputDirectory>${gui.project.path}</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>commons-betwixt</groupId>
             <artifactId>commons-betwixt</artifactId>
-            <version>0.8</version>
+            <version>${commons.betwixt.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -18,12 +40,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>3.2.4.RELEASE</version>
+            <version>${spring-jdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>com.healthmarketscience.sqlbuilder</groupId>
             <artifactId>sqlbuilder</artifactId>
-            <version>2.0.0</version>
+            <version>${sqlbuilder.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
