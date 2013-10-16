@@ -53,8 +53,8 @@ public class DataTable extends JTable {
         for (int i = 0; i <tableItem.getColumns().size(); i++) {
             List<ColumnItem> columns = tableItem.getColumns();
             ColumnItem columnItem = columns.get(i);
-            if (columnItem.getIndexTableName() != null && !columnItem.getIndexTableName().equals("")
-                    && columnItem.getIndexColumnName() != null && !columnItem.getIndexColumnName().equals("")) {
+            if (columnItem.getRelationTableName() != null && !columnItem.getRelationTableName().equals("")
+                    && columnItem.getRelationColumnName() != null && !columnItem.getRelationColumnName().equals("")) {
                 getColumnModel().getColumn(i).setHeaderRenderer(cellRenderer);
                 indexColumns.put(i, columnItem);
             }
@@ -67,7 +67,7 @@ public class DataTable extends JTable {
                 if (indexColumns.containsKey(index)) {
                     int[] selectedRows = DataTable.this.getSelectedRows();
                     ColumnItem columnItem = indexColumns.get(index);
-                    TableItem creatingTableItem = databaseBeanHelper.getTableItemByName(columnItem.getIndexTableName());
+                    TableItem creatingTableItem = databaseBeanHelper.getTableItemByName(columnItem.getRelationTableName());
                     if (selectedRows.length >= 1) {
                         List<String> links = new ArrayList<String>();
                         for (int i = 0; i < selectedRows.length; i++) {
@@ -98,8 +98,8 @@ public class DataTable extends JTable {
                                 TableItem tableItem1 = databaseBeanHelper.getTableItemByName(table);
                                 String indexColumn = null;
                                 for (ColumnItem columnItem : tableItem1.getColumns()) {
-                                    if (columnItem.getIndexTableName() != null) {
-                                        if (columnItem.getIndexTableName().equals(tableItem.getName()))
+                                    if (columnItem.getRelationTableName() != null) {
+                                        if (columnItem.getRelationTableName().equals(tableItem.getName()))
                                             indexColumn = columnItem.getName();
                                     }
                                 }

@@ -36,7 +36,7 @@ public class DatabaseBeanHelper {
     }
 
     public DatabaseXMLBean getDatabaseXMLBean() {
-        if (!parser.getBeanFromXML().equals(this.databaseXMLBean))
+        if (!parser.getBeanFromXML(DatabaseXMLBean.class).equals(this.databaseXMLBean))
             this.databaseXMLBean = (DatabaseXMLBean) parser.getBeanFromXML(DatabaseXMLBean.class);
         return databaseXMLBean;
     }

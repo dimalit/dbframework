@@ -81,6 +81,7 @@ public class SqlQueryBuilder {
                                 new CustomSql(tableItem.getName() + "." + metadataDao.getPrimaryKeyColumns(tableItem.getName()).get(0))));
             }
         }
+        query.addCustomFromTable(new CustomSql(tableItem.getName()));
         /*-------Group by------*/
         query.addCustomGroupings(new CustomSql(tableItem.getName() + "." + tableItem.getColumns().get(0).getName()));
     }

@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseBeanHelper;
@@ -212,31 +211,33 @@ public class Dao {
     }*/
 
     public Map<String, List<String>> getData(String query) {
-        ResultSet resultSet = null;
-        Statement statement = null;
-        Connection connection = null;
+        ResultSet rs = null;
+        Statement stmt = null;
+        Connection con = null;
         Map<String, List<String>> data = null;
 
         try {
-            connection = ConnectionUtils.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query.toString());
+            con = ConnectionUtils.getConnection();
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            rs = stmt.executeQuery(query.toString());
             data = new LinkedHashMap<String, List<String>>();
 
-            ResultSetMetaData rsmd = resultSet.getMetaData();
+            ResultSetMetaData rsmd = rs.getMetaData();
             int columnsCount = rsmd.getColumnCount();
 
             for (int i = 1; i <= columnsCount; i++) {
                 ArrayList<String> colData = new ArrayList<String>();
-                while (resultSet.next()) {
-                    colData.add(resultSet.getString(i));
+                if (rs.first()) {
+                    while (rs.next()) {
+                        colData.add(rs.getString(i));
+                    }
+                    data.put(rsmd.getColumnLabel(i), colData);
+                    rs.beforeFirst();
                 }
-                data.put(rsmd.getColumnLabel(i), colData);
-                resultSet.beforeFirst();
             }
         } catch (SQLException e) {
             throw new RuntimeException(
-                    "Exception in Dao.getData(tableItem)", e.getCause());
+                    "Exception in Dao.getData(tableItem)", e);
         }
        return data;
     }

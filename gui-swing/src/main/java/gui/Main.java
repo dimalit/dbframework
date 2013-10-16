@@ -1,6 +1,6 @@
 package gui;
 
-import edu.dbframework.database.MetadataUtils;
+import edu.dbframework.database.MetadataDao;
 import edu.dbframework.parse.beans.DatabaseXMLBean;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseBeanHelper;
@@ -104,8 +104,8 @@ public class Main {
 			}
 
 			private void createTablesXMLFile() {
-				MetadataUtils metadataUtils = new MetadataUtils();
-                DatabaseXMLBean xmlBean = metadataUtils.createTablesXMLBean();
+                MetadataDao metadataDao = new MetadataDao();
+                DatabaseXMLBean xmlBean = metadataDao.createTablesXMLBean();
 				databaseBeanHelper.setDatabaseXMLBean(xmlBean);
 			}
 		});

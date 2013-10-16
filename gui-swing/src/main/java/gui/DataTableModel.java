@@ -1,9 +1,8 @@
 package gui;
 
-import edu.dbframework.database.DataUtils;
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
-import edu.dbframework.service.DatabaseService;
+import edu.dbframework.service.Service;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -15,21 +14,13 @@ public class DataTableModel extends AbstractTableModel {
 	
 	private Map<String, List<String>> data;
 	private List<String> columnNames;
+    private Service service = new Service();
 
     private String tableName;
 	
-	public DataTableModel(String table) {
-        this.tableName = table;
-		DataUtils dataUtils = new DataUtils();
-		this.data = dataUtils.getData(table);
-		this.columnNames = new ArrayList<String>();
-		this.columnNames.addAll(data.keySet());
-	}
-	
 	public DataTableModel(TableItem item) {
         this.tableName = item.getName();
-        DatabaseService databaseService = new DatabaseService();
-        this.data = databaseService.getDataForTableItem(item);
+        this.data = service.getDataForTableItem(item);
 		this.columnNames = new ArrayList<String>();
 		for (ColumnItem columnItem : item.getColumns()) {
 			if (columnItem.getAlias() != null) {
@@ -43,8 +34,7 @@ public class DataTableModel extends AbstractTableModel {
 
     public DataTableModel(TableItem tableItem, List<String> links, ColumnItem column, String referTable) {
         this.tableName = tableItem.getName();
-        DataUtils dataUtils = new DataUtils();
-        this.data = dataUtils.getData(tableItem, links, column, referTable);
+        this.data = service.getDataByRows(tableItem, links, column, referTable);
         this.columnNames = new ArrayList<String>();
         for (ColumnItem columnItem : tableItem.getColumns()) {
             if (columnItem.getAlias() != null) {
@@ -58,8 +48,7 @@ public class DataTableModel extends AbstractTableModel {
 
     public DataTableModel(TableItem tableItem, String primaryKey, String indexColumn) {
         this.tableName = tableItem.getName();
-        DataUtils dataUtils = new DataUtils();
-        this.data = dataUtils.getData(tableItem, primaryKey, indexColumn);
+        this.data = service.getDataByRelationColumn(tableItem, primaryKey, indexColumn);
         this.columnNames = new ArrayList<String>();
         for (ColumnItem columnItem : tableItem.getColumns()) {
             if (columnItem.getAlias() != null) {

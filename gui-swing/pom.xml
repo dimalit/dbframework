@@ -7,6 +7,14 @@
     <groupId>groupId</groupId>
     <artifactId>gui-swing</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <commons.betwixt.version>0.8</commons.betwixt.version>
+        <spring-jdbc.version>3.2.4.RELEASE</spring-jdbc.version>
+        <sqlbuilder.version>2.0.0</sqlbuilder.version>
+        <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>commons-betwixt</groupId>
@@ -17,6 +25,18 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.healthmarketscience.sqlbuilder</groupId>
+            <artifactId>sqlbuilder</artifactId>
+            <version>${sqlbuilder.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.dbframework</groupId>
+            <artifactId>dbframework</artifactId>
+            <version>0.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/dbframefork-0.0.1.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
