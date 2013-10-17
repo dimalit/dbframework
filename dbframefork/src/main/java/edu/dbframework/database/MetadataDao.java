@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.dbframework.parse.beans.DatabaseXMLBean;
+import edu.dbframework.parse.beans.DatabaseBean;
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
 
@@ -112,8 +112,8 @@ public class MetadataDao {
 		return columns;
 	}
 	
-	public DatabaseXMLBean createTablesXMLBean() {
-		DatabaseXMLBean xmlBean = new DatabaseXMLBean();
+	public DatabaseBean createTablesXMLBean() {
+		DatabaseBean xmlBean = new DatabaseBean();
 		List<TableItem> tables = new ArrayList<TableItem>();
 		for (String table : getTables()) {
             List<String> primaryKeys = this.getPrimaryKeyColumns(table);

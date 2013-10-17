@@ -7,7 +7,7 @@ import com.healthmarketscience.sqlbuilder.InCondition;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
-import edu.dbframework.parse.helpers.DatabaseBeanHelper;
+import edu.dbframework.parse.helpers.DatabaseManager;
 
 import java.util.List;
 import java.util.Map;
@@ -49,7 +49,7 @@ public class SqlQueryBuilder {
 
     private void performSelectQuery(TableItem tableItem) {
         query = new SelectQuery();
-        Map<String, ColumnItem> extRefs = new DatabaseBeanHelper().getExternalReferencesForTable(tableItem.getName());
+        Map<String, ColumnItem> extRefs = new DatabaseManager().getDatabaseBean().externalReferencesForTable(tableItem.getName());
 
         /*-------Columns------*/
         for (ColumnItem item : tableItem.getColumns()) {
@@ -67,6 +67,8 @@ public class SqlQueryBuilder {
                 query.addCustomColumns(FunctionCall.count().addCustomParams(new CustomSql( table + "." + extRefs.get(table).getName())));
             }
         }
+        query.addCustomFromTable(new CustomSql(tableItem.getName()));
+
         /*-------Joins------*/
         for (ColumnItem column : tableItem.columnsWithRelationsAsList()) {
             String relTableName = column.getRelationTableName();
@@ -81,7 +83,6 @@ public class SqlQueryBuilder {
                                 new CustomSql(tableItem.getName() + "." + metadataDao.getPrimaryKeyColumns(tableItem.getName()).get(0))));
             }
         }
-        query.addCustomFromTable(new CustomSql(tableItem.getName()));
         /*-------Group by------*/
         query.addCustomGroupings(new CustomSql(tableItem.getName() + "." + tableItem.getColumns().get(0).getName()));
     }

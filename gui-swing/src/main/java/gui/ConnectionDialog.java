@@ -1,7 +1,7 @@
 package gui;
 
-import edu.dbframework.parse.beans.ConnectionXMLBean;
-import edu.dbframework.parse.parsers.AbstractParser;
+import edu.dbframework.parse.beans.ConnectionBean;
+import edu.dbframework.parse.parsers.GenericParser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,8 +70,8 @@ public class ConnectionDialog extends JDialog {
 			}
 
 			private void createConnectionConfig(String user, String password, String driver, String url) {
-				ConnectionXMLBean xmlBean = new ConnectionXMLBean(driver, url, user, password);
-                AbstractParser parser = new AbstractParser(CONNECTION_CONFIG_XML);
+                ConnectionBean xmlBean = new ConnectionBean(driver, url, user, password);
+                GenericParser parser = new GenericParser(CONNECTION_CONFIG_XML);
 				parser.addBeanToXML(xmlBean);
 			}
 		});
@@ -96,11 +96,11 @@ public class ConnectionDialog extends JDialog {
 		gl_centerPanel.setVgap(30);
 		centerPanel.setLayout(gl_centerPanel);
 		getContentPane().add(centerPanel, BorderLayout.CENTER);
-		
-		ConnectionXMLBean xmlBean = null;
-        AbstractParser parser = new AbstractParser(CONNECTION_CONFIG_XML);
+
+        ConnectionBean xmlBean = null;
+        GenericParser parser = new GenericParser(CONNECTION_CONFIG_XML);
 		if (new File(CONNECTION_CONFIG_XML).exists())
-			xmlBean = (ConnectionXMLBean) parser.getBeanFromXML(ConnectionXMLBean.class);
+			xmlBean = (ConnectionBean) parser.getBeanFromXML(ConnectionBean.class);
 		
 		JLabel lblUser = new JLabel("User");
 		lblUser.setSize(new Dimension(10, 50));

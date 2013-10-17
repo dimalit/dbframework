@@ -1,18 +1,11 @@
 package edu.dbframework.database;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
-import edu.dbframework.parse.helpers.DatabaseBeanHelper;
+import edu.dbframework.parse.helpers.DatabaseManager;
+
+import java.sql.*;
+import java.util.*;
 
 
 public class Dao {
@@ -111,8 +104,8 @@ public class Dao {
 
             List<ColumnItem> columnItems = tableItem.getColumns();
 
-            DatabaseBeanHelper databaseBeanHelper = new DatabaseBeanHelper();
-            Map<String, ColumnItem> extRefTables = databaseBeanHelper.getExternalReferencesForTable(tableItem.getName());
+            DatabaseManager databaseManager = new DatabaseManager();
+            Map<String, ColumnItem> extRefTables = databaseManager.getDatabaseBean().externalReferencesForTable(tableItem.getName());
 
             if (extRefTables != null) {
                 for (String table : extRefTables.keySet()) {

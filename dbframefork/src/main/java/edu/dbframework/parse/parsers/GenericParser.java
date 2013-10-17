@@ -1,22 +1,22 @@
 package edu.dbframework.parse.parsers;
 
+import org.apache.commons.betwixt.io.BeanReader;
+import org.apache.commons.betwixt.io.BeanWriter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
-import org.apache.commons.betwixt.io.BeanReader;
-import org.apache.commons.betwixt.io.BeanWriter;
 
 /**
  * 
  * @author GreenPoser
  * 
  */
-public class AbstractParser {
+public class GenericParser {
 
     private File parsingFile;
 	
-	public AbstractParser(String fileName) {
+	public GenericParser(String fileName) {
         this.parsingFile = new File(fileName);
 	}
 
@@ -29,14 +29,9 @@ public class AbstractParser {
 			writer.setWriteIDs(false);
 			writer.write(bean);
 		} catch (Exception e) {
-			throw new RuntimeException("Exception in AbstractParser.addBeanToXml: ", e.getCause());
+			throw new RuntimeException("Exception in GenericParser.addBeanToXml: ", e);
 		}
 	}
-	
-	@SuppressWarnings("rawtypes")
-    public Object getBeanFromXML() {
-        return this.getBeanFromXML(Object.class);
-    }
 
 	public Object getBeanFromXML(Class clazz) {
 		Object bean = null;
@@ -50,7 +45,7 @@ public class AbstractParser {
 			bean = beanReader
 					.parse(fileInputStream);
 		} catch (Exception e) {
-			throw new RuntimeException("Exception in AbstractParser.getBeanFromXML: ", e.getCause());
+			throw new RuntimeException("Exception in GenericParser.getBeanFromXML: ", e);
 		}
 		return bean;
 	}

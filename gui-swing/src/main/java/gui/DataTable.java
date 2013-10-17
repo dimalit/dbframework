@@ -2,7 +2,7 @@ package gui;
 
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
-import edu.dbframework.parse.helpers.DatabaseBeanHelper;
+import edu.dbframework.parse.helpers.DatabaseManager;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -44,11 +44,11 @@ public class DataTable extends JTable {
     public void renderListeners() {
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setBackground(Color.LIGHT_GRAY);
-        final DatabaseBeanHelper databaseBeanHelper = new DatabaseBeanHelper();
+        final DatabaseManager databaseManager = new DatabaseManager();
 
         final DataTableModel model = (DataTableModel) this.getModel();
         final HashMap<Integer, ColumnItem> indexColumns = new HashMap<Integer, ColumnItem>();
-        final TableItem tableItem = databaseBeanHelper.getTableItemByName(model.getTableName());
+        final TableItem tableItem = databaseManager.getDatabaseBean().createTablesMap().get(model.getTableName());
 
         for (int i = 0; i <tableItem.getColumns().size(); i++) {
             List<ColumnItem> columns = tableItem.getColumns();
@@ -67,7 +67,7 @@ public class DataTable extends JTable {
                 if (indexColumns.containsKey(index)) {
                     int[] selectedRows = DataTable.this.getSelectedRows();
                     ColumnItem columnItem = indexColumns.get(index);
-                    TableItem creatingTableItem = databaseBeanHelper.getTableItemByName(columnItem.getRelationTableName());
+                    TableItem creatingTableItem = databaseManager.getDatabaseBean().createTablesMap().get(columnItem.getRelationTableName());
                     if (selectedRows.length >= 1) {
                         List<String> links = new ArrayList<String>();
                         for (int i = 0; i < selectedRows.length; i++) {
@@ -95,7 +95,7 @@ public class DataTable extends JTable {
                             if (getColumnModel().getSelectionModel().getLeadSelectionIndex() == k) {
                                 String columnName = DataTable.this.getColumnName(selectedColumn);
                                 String table = columnName.substring(columnName.lastIndexOf("_") + 1);
-                                TableItem tableItem1 = databaseBeanHelper.getTableItemByName(table);
+                                TableItem tableItem1 = databaseManager.getDatabaseBean().createTablesMap().get(table);
                                 String indexColumn = null;
                                 for (ColumnItem columnItem : tableItem1.getColumns()) {
                                     if (columnItem.getRelationTableName() != null) {

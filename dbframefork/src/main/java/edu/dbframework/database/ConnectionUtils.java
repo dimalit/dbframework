@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import edu.dbframework.parse.beans.ConnectionXMLBean;
-import edu.dbframework.parse.parsers.AbstractParser;
+import edu.dbframework.parse.beans.ConnectionBean;
+import edu.dbframework.parse.parsers.GenericParser;
 
 
 public class ConnectionUtils {
@@ -14,8 +14,8 @@ public class ConnectionUtils {
 
 	public static Connection getConnection() {
 
-		AbstractParser parser = new AbstractParser("connectionConfig.xml");
-		ConnectionXMLBean bean = (ConnectionXMLBean) parser.getBeanFromXML(ConnectionXMLBean.class);
+		GenericParser parser = new GenericParser("connectionConfig.xml");
+		ConnectionBean bean = (ConnectionBean) parser.getBeanFromXML(ConnectionBean.class);
 		
 		try {
 			Class.forName(bean.getDriver());

@@ -5,17 +5,17 @@ package edu.dbframework.parse.beans;
  * @author GreenPoser
  * 
  */
-public class ConnectionXMLBean {
+public class ConnectionBean {
 
 	private String driver;
 	private String url;
 	private String user;
 	private String password;
 
-	public ConnectionXMLBean() {
+	public ConnectionBean() {
 	}
 	
-	public ConnectionXMLBean(String driver, String url, String user, String password) {
+	public ConnectionBean(String driver, String url, String user, String password) {
 		this.driver = driver;
 		this.password = password;
 		this.url = url;

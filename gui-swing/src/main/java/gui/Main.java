@@ -1,9 +1,9 @@
 package gui;
 
 import edu.dbframework.database.MetadataDao;
-import edu.dbframework.parse.beans.DatabaseXMLBean;
+import edu.dbframework.parse.beans.DatabaseBean;
 import edu.dbframework.parse.beans.items.TableItem;
-import edu.dbframework.parse.helpers.DatabaseBeanHelper;
+import edu.dbframework.parse.helpers.DatabaseManager;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -22,7 +22,7 @@ public class Main {
 	private JList tablesList;
     static JPanel centerTablePanel;
 
-	private final DatabaseBeanHelper databaseBeanHelper = new DatabaseBeanHelper();
+	private final DatabaseManager databaseManager = new DatabaseManager();
 
 	/**
 	 * Launch the application.
@@ -105,8 +105,8 @@ public class Main {
 
 			private void createTablesXMLFile() {
                 MetadataDao metadataDao = new MetadataDao();
-                DatabaseXMLBean xmlBean = metadataDao.createTablesXMLBean();
-				databaseBeanHelper.setDatabaseXMLBean(xmlBean);
+                DatabaseBean xmlBean = metadataDao.createTablesXMLBean();
+				databaseManager.setDatabaseBean(xmlBean);
 			}
 		});
 		northButtonPanel.add(generateTablesXMLButton);
@@ -135,8 +135,8 @@ public class Main {
 		loadTablesButton = new JButton("Load Tables");
 		loadTablesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-                if (databaseBeanHelper.getDatabaseXMLBean() != null)
-					tablesList.setListData(databaseBeanHelper.getTablesList().toArray());
+                if (databaseManager.getDatabaseBean() != null)
+					tablesList.setListData(databaseManager.getDatabaseBean().tablesAsStringList().toArray());
 				}
 		});
 		northButtonPanel.add(loadTablesButton);
@@ -166,8 +166,8 @@ public class Main {
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
                     String selectedTable = (String) tablesList.getSelectedValue();
-                    if (databaseBeanHelper.getDatabaseXMLBean() != null) {
-                        TableItem tableItem = databaseBeanHelper.getTableItemByName(selectedTable);
+                    if (databaseManager.getDatabaseBean() != null) {
+                        TableItem tableItem = databaseManager.getDatabaseBean().createTablesMap().get((selectedTable));
                         DataTable table = new DataTable(new DataTableModel(tableItem));
                         drawTable(table);
                     }
