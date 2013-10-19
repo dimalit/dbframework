@@ -23,7 +23,7 @@ public class ConnectionUtils {
 					bean.getUser(), bean.getPassword());
 		} catch (Exception e) {
 			throw new RuntimeException(
-					"Exception in ConnectionUtils.getConnection", e.getCause());
+					"Exception in ConnectionUtils.getConnection", e);
 		}
 
 		return connection;
@@ -35,7 +35,7 @@ public class ConnectionUtils {
 				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException(
-						"Exception in ConnectionUtils.closeConnection", e.getCause());
+						"Exception in ConnectionUtils.closeConnection", e);
 			}
 		}
 	}
