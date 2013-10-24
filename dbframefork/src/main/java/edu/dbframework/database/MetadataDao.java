@@ -1,14 +1,19 @@
 package edu.dbframework.database;
 
-import java.sql.Connection;
+import edu.dbframework.parse.beans.DatabaseBean;
+import edu.dbframework.parse.beans.items.ColumnItem;
+import edu.dbframework.parse.beans.items.TableItem;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.support.DatabaseMetaDataCallback;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.MetaDataAccessException;
+
+import javax.sql.DataSource;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.dbframework.parse.beans.DatabaseBean;
-import edu.dbframework.parse.beans.items.ColumnItem;
-import edu.dbframework.parse.beans.items.TableItem;
 
 
 /**
@@ -18,100 +23,82 @@ import edu.dbframework.parse.beans.items.TableItem;
  */
 public class MetadataDao {
 
-	public final static String TABLE_TYPE = "TABLE";
-	public final static String VIEW_TYPE = "VIEW";
-	public final static String COLUMN = "COLUMN_NAME";
+    private DataSource dataSource;
+
+    private final static String TABLE = "TABLE";
+    private final static String VIEW = "VIEW";
+
+    private final static String TABLE_NAME = "TABLE_NAME";
+    private final static String COLUMN_NAME = "COLUMN_NAME";
+
 
 	public MetadataDao() {
 	}
 
 	public List<String> getTables() {
-		ResultSet resultSet = null;
-		List<String> tables = null;
-		Connection connection = null;
-
-		try {
-			connection = ConnectionUtils.getConnection();
-			String[] types = new String[1];
-			types[0] = TABLE_TYPE;
-			resultSet = connection.getMetaData().getTables(null, null, null,
-					types);
-			tables = new ArrayList<String>();
-			while (resultSet.next()) {
-				tables.add(resultSet.getString("TABLE_NAME"));
-			}
-		} catch (Exception e) {
-			throw new RuntimeException("Exception in MetadataDao.getTables",
-					e.getCause());
-		} finally {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				throw new RuntimeException(
-						"Exception in MetadataDao.getTables", e.getCause());
-			}
-			ConnectionUtils.closeConnection();
-		}
-
-		return tables;
+        List<String> tables = null;
+        try {
+            tables = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
+                @Override
+                public Object processMetaData(DatabaseMetaData databaseMetaData) throws SQLException, MetaDataAccessException {
+                    MetadataResultSetExtractor mrse = new MetadataResultSetExtractor(TABLE_NAME);
+                    return mrse.extractData(databaseMetaData.getTables(null, null, null, new String[]{TABLE}));
+                }
+            });
+        } catch (MetaDataAccessException e) {
+            throw new RuntimeException("Exception in MetadataDao.getTables", e);
+        }
+        return tables;
 	}
 
 	public List<String> getViews() {
-		ResultSet resultSet = null;
-		List<String> views = null;
-		Connection connection = null;
-
-		try {
-			connection = ConnectionUtils.getConnection();
-			String[] types = new String[1];
-			types[0] = VIEW_TYPE;
-			resultSet = connection.getMetaData().getTables(null, null, null,
-					types);
-			views = new ArrayList<String>();
-			while (resultSet.next()) {
-				views.add(resultSet.getString("TABLE_NAME"));
-			}
-		} catch (Exception e) {
-			throw new RuntimeException("Exception in MetadataDao.getViews", e.getCause());
-		} finally {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				throw new RuntimeException(
-						"Exception in MetadataDao.getViews", e.getCause());
-			}
-			ConnectionUtils.closeConnection();
-		}
-		return views;
+        List<String> views = null;
+        try {
+            views = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
+                @Override
+                public Object processMetaData(DatabaseMetaData databaseMetaData) throws SQLException, MetaDataAccessException {
+                    MetadataResultSetExtractor mrse = new MetadataResultSetExtractor(TABLE_NAME);
+                    return mrse.extractData(databaseMetaData.getTables(null, null, null, new String[]{VIEW}));
+                }
+            });
+        } catch (MetaDataAccessException e) {
+            throw new RuntimeException("Exception in MetadataDao.getViews", e);
+        }
+        return views;
 	}
 
-	public List<String> getColumns(String table) {
-		ResultSet resultSet = null;
-		List<String> columns = null;
-		Connection connection = null;
-
-		try {
-			connection = ConnectionUtils.getConnection();
-			resultSet = connection.getMetaData().getColumns(null, null, table,
-					null);
-			columns = new ArrayList<String>();
-			while (resultSet.next()) {
-				columns.add(resultSet.getString(COLUMN));
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException("Exception in MetadataDao.getViews", e.getCause());
-		} finally {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				throw new RuntimeException(
-						"Exception in MetadataDao.getColumns", e.getCause());
-			}
-			ConnectionUtils.closeConnection();
-		}
-		return columns;
+	public List<String> getColumns(final String table) {
+        List<String> columns = null;
+        try {
+            columns = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
+                @Override
+                public Object processMetaData(DatabaseMetaData databaseMetaData) throws SQLException, MetaDataAccessException {
+                    MetadataResultSetExtractor mrse = new MetadataResultSetExtractor(COLUMN_NAME);
+                    return mrse.extractData(databaseMetaData.getColumns(null, null, table, null));
+                }
+            });
+        } catch (MetaDataAccessException e) {
+            throw new RuntimeException("Exception in MetadataDao.getColumns", e);
+        }
+        return columns;
 	}
-	
+
+    public List<String> getPrimaryKeyColumns(final String table) {
+        List<String> primaryKeyColumns = null;
+        try {
+            primaryKeyColumns = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
+                @Override
+                public Object processMetaData(DatabaseMetaData databaseMetaData) throws SQLException, MetaDataAccessException {
+                    MetadataResultSetExtractor mrse = new MetadataResultSetExtractor(COLUMN_NAME);
+                    return mrse.extractData(databaseMetaData.getPrimaryKeys(null, null, table));
+                }
+            });
+        } catch (MetaDataAccessException e) {
+            throw new RuntimeException("Exception in MetadataDao.getPrimaryKeyColumns", e);
+        }
+        return primaryKeyColumns;
+    }
+
 	public DatabaseBean createTablesXMLBean() {
 		DatabaseBean xmlBean = new DatabaseBean();
 		List<TableItem> tables = new ArrayList<TableItem>();
@@ -135,31 +122,33 @@ public class MetadataDao {
 		xmlBean.setTables(tables);
 		return xmlBean;
 	}
-	
-	public List<String> getPrimaryKeyColumns(String table) {
-		ResultSet resultSet = null;
-		List<String> primaryKeyColumns = null;
-		Connection connection = null;
-		try {
-			connection = ConnectionUtils.getConnection();
-			resultSet = connection.getMetaData().getPrimaryKeys(null, null,
-					table);
-			primaryKeyColumns = new ArrayList<String>();
-			while (resultSet.next()) {
-				primaryKeyColumns.add(resultSet.getString(COLUMN));
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(
-					"Exception in MetadataDao.getPrimaryKeyColumns", e.getCause());
-		} finally {
-			ConnectionUtils.closeConnection();
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				throw new RuntimeException(
-						"Exception in MetadataDao.getPrimaryKeyColumns", e.getCause());
-			}
-		}
-		return primaryKeyColumns;
-	}
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    private class MetadataResultSetExtractor implements ResultSetExtractor<List<String>> {
+        private String field;
+
+        MetadataResultSetExtractor(String field) {
+            this.field = field;
+        }
+
+        @Override
+        public List<String> extractData(ResultSet resultSet)  {
+            List<String> list = new ArrayList<String>();
+            try {
+                while (resultSet.next()) {
+                    list.add(resultSet.getString(field));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Exception in MetadataResultSetExtractor.extractData", e);
+            }
+            return list;
+        }
+    }
 }

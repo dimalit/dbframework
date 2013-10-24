@@ -11,6 +11,7 @@
         <sqlbuilder.version>2.0.0</sqlbuilder.version>
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
         <gui.project.path>C:\Users\bondarets\diplom\gui-swing\lib</gui.project.path>
+        <spring-context.version>3.1.2.RELEASE</spring-context.version>
     </properties>
 
     <build>
@@ -39,6 +40,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring-context.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <version>${spring-jdbc.version}</version>
         </dependency>
@@ -48,9 +54,9 @@
             <version>${sqlbuilder.version}</version>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.9</version>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901.jdbc4</version>
         </dependency>
     </dependencies>
 </project>

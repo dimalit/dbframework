@@ -18,7 +18,6 @@ public class SqlQueryBuilder {
     private MetadataDao metadataDao;
 
     public SqlQueryBuilder() {
-        metadataDao = new MetadataDao();
     }
 
     public String buildQueryForTableItem(TableItem tableItem) {
@@ -85,5 +84,13 @@ public class SqlQueryBuilder {
         }
         /*-------Group by------*/
         query.addCustomGroupings(new CustomSql(tableItem.getName() + "." + tableItem.getColumns().get(0).getName()));
+    }
+
+    public void setMetadataDao(MetadataDao metadataDao) {
+        this.metadataDao = metadataDao;
+    }
+
+    public MetadataDao getMetadataDao() {
+        return metadataDao;
     }
 }
