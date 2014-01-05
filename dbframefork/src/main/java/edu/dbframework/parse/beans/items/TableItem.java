@@ -14,16 +14,25 @@ import java.util.Map;
  *
  */
 public class TableItem {
-	
-	private String name;
-	private List<ColumnItem> columns = new ArrayList<ColumnItem>();
 
+    private ColumnItem primaryKey;
+
+    private String name;
+    private List<ColumnItem> columns = new ArrayList<ColumnItem>();
     public TableItem() {
     }
-	
+
 	public List<ColumnItem> getColumns() {
 		return columns;
 	}
+
+    public ColumnItem getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(ColumnItem primaryKey) {
+        this.primaryKey = primaryKey;
+    }
 
 	public void setColumns(List<ColumnItem> columns) {
 		this.columns = columns;
