@@ -1,6 +1,6 @@
+/*
 package gui;
 
-import edu.dbframework.parse.beans.ConnectionBean;
 import edu.dbframework.parse.parsers.GenericParser;
 
 import javax.swing.*;
@@ -17,9 +17,11 @@ public class ConnectionDialog extends JDialog {
 	private JTextField driverTextField;
 	private JTextField urlTextField;
 
-	/**
+	*/
+/**
 	 * Launch the application.
-	 */
+	 *//*
+
 //	public static void main(String[] args) {
 //		try {
 //			ConnectionDialog dialog = new ConnectionDialog();
@@ -30,9 +32,11 @@ public class ConnectionDialog extends JDialog {
 //		}
 //	}
 
-	/**
+	*/
+/**
 	 * Create the dialog.
-	 */
+	 *//*
+
 	public ConnectionDialog() {
 		setTitle("Connection Config Modal");
 		setBounds(100, 100, 350, 250);
@@ -140,3 +144,4 @@ public class ConnectionDialog extends JDialog {
 		urlTextField.setColumns(10);
 	}
 }
+*/

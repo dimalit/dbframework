@@ -10,12 +10,23 @@
 
     <properties>
         <commons.betwixt.version>0.8</commons.betwixt.version>
+        <spring-context.version>3.1.2.RELEASE</spring-context.version>
         <spring-jdbc.version>3.2.4.RELEASE</spring-jdbc.version>
         <sqlbuilder.version>2.0.0</sqlbuilder.version>
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring-context.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring-jdbc.version}</version>
+        </dependency>
         <dependency>
             <groupId>commons-betwixt</groupId>
             <artifactId>commons-betwixt</artifactId>
@@ -30,6 +41,16 @@
             <groupId>com.healthmarketscience.sqlbuilder</groupId>
             <artifactId>sqlbuilder</artifactId>
             <version>${sqlbuilder.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout</artifactId>
+            <version>3.7.4</version>
         </dependency>
         <dependency>
             <groupId>edu.dbframework</groupId>
