@@ -6,6 +6,8 @@ import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
 import gui.table.DataTable;
 import gui.table.DataTableModel;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -20,6 +22,8 @@ import java.io.IOException;
 public class Main {
 
 	public static final String TABLES_XML = "database.xml";
+
+    public static ApplicationContext context = new ClassPathXmlApplicationContext("databaseContext.xml");
 	/**
 	 * Launch the application.
 	 */
