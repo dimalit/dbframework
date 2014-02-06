@@ -18,7 +18,7 @@ public class PropertyUtility {
 
     private final static String propertyPath = "src/main/resources/jdbc.properties";
 
-    public final static String userProp = "jdbc.user";
+    public final static String userProp = "jdbc.username";
     public final static String passwordProp = "jdbc.password";
     public final static String driverProp = "jdbc.driverClassName";
     public final static String urlProp = "jdbc.url";

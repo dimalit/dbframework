@@ -3,7 +3,7 @@ package gui.table;
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
-import gui.MainFrame;
+import gui.frame.MainFrame;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
