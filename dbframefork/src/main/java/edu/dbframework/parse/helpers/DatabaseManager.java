@@ -5,13 +5,6 @@ import edu.dbframework.parse.parsers.GenericParser;
 
 import java.io.File;
 
-/**
- * Created with IntelliJ IDEA.
- * User: GreenPoser
- * Date: 13.06.13
- * Time: 23:02
- * To change this template use File | Settings | File Templates.
- */
 public class DatabaseManager {
 
     private File parsingFile;
