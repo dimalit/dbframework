@@ -28,10 +28,6 @@ public class SqlQueryBuilder {
     public String buildQueryByRows(TableItem tableItem, List<String> rows, ColumnItem bindingColumn, String relTable) {
         performSelectQuery(tableItem);
 
-        query.addCustomJoin(SelectQuery.JoinType.LEFT_OUTER,tableItem.getName(), relTable,
-                BinaryCondition.equalTo(new CustomSql(relTable + "." + bindingColumn.getName()),
-                        new CustomSql(tableItem.getName() + "." + bindingColumn.getName())));
-
         query.addCondition(new InCondition(new CustomSql(bindingColumn.getRelationTableName() + "." + bindingColumn.getRelationColumnName()), rows));
 
         return query.toString();
@@ -54,13 +50,14 @@ public class SqlQueryBuilder {
         for (ColumnItem item : tableItem.getColumns()) {
             if (item.getAlias() != null && !item.getAlias().equals("")) {
                 query.addCustomColumns(new CustomSql(tableItem.getName() + "." + item.getName() + " as " + item.getAlias()));
+            } else if (item.getRelationTableName() != null && item.getRelationColumnName() != null) {
+                query.addCustomColumns(new CustomSql(item.getRelationTableName() + "." + item.getRelationColumnName()
+                        + " as " + item.getName()));
             } else {
                 query.addCustomColumns(new CustomSql(tableItem.getName() + "." + item.getName()));
             }
         }
-        for (String relColumn : tableItem.relationColumnsAsStringArray()) {
-            query.addCustomColumns(new CustomSql(relColumn));
-        }
+
         if (extRefs.size() > 0) {
             for (String table : extRefs.keySet()) {
                 query.addCustomColumns(FunctionCall.count().addCustomParams(new CustomSql( table + "." + extRefs.get(table).getName())));

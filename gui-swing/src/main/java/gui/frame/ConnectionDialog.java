@@ -101,8 +101,8 @@ public class ConnectionDialog extends JDialog {
                     messageLabel.setText("Required Field Missed");
                 } else {
                     setConnectionProperties(user, password, driver, url);
-                    MainFrame frame = (MainFrame) Main.getBeanFromContext("mainFrame");
-                    frame.refreshNorthPanel();
+                    //MainFrame frame = (MainFrame) Main.getBeanFromContext("mainFrame");
+                    //frame.refreshNorthPanel();
                     ConnectionDialog.this.setVisible(false);
                 }
             }

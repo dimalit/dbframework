@@ -44,10 +44,6 @@ public class PropertyUtility {
         return instance;
     }
 
-    public Properties getProperties() {
-        return properties;
-    }
-
     public String getProperty(String key) {
         return properties.getProperty(key);
     }

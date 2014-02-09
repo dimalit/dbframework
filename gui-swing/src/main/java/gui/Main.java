@@ -21,7 +21,7 @@ public class Main {
 				try {
                     UIManager.setLookAndFeel(
                             UIManager.getSystemLookAndFeelClassName());
-                    MainFrame window = (MainFrame) context.getBean("mainFrame");
+                    MainFrame window = new MainFrame();
                     window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

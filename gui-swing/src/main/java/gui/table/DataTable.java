@@ -16,13 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: GreenPoser
- * Date: 02.06.13
- * Time: 16:28
- * To change this template use File | Settings | File Templates.
- */
 public class DataTable extends JTable {
 
     public DataTable(DataTableModel tableModel) {

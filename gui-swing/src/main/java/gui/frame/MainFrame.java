@@ -22,13 +22,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * Created with IntelliJ IDEA.
- * User: GreenPoser
- * Date: 05.01.14
- * Time: 18:26
- * To change this template use File | Settings | File Templates.
- */
 public class MainFrame extends JFrame {
 
     JMenuBar menuBar;
@@ -184,8 +177,8 @@ public class MainFrame extends JFrame {
     }
 
     public static void drawTable(JTable table) {
+        centerTablePanel.removeAll();
         centerTablePanel.revalidate();
-        //centerTablePanel.removeAll();
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(centerTablePanel.getWidth(), centerTablePanel.getHeight()));
         centerTablePanel.add(scrollPane);
