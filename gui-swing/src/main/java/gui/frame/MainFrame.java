@@ -6,7 +6,9 @@ import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
 import gui.Main;
 import gui.table.DataTable;
+import gui.table.DataTableManager;
 import gui.table.DataTableModel;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
 import javax.swing.*;
@@ -168,7 +170,7 @@ public class MainFrame extends JFrame {
                     String selectedTable = (String) tablesList.getSelectedValue();
                     if (databaseManager.getDatabaseBean() != null) {
                         TableItem tableItem = databaseManager.getDatabaseBean().createTablesMap().get((selectedTable));
-                        DataTable table = new DataTable(new DataTableModel(tableItem));
+                        DataTable table = new DataTable(new DataTableManager().getTableItemDataModel(tableItem));
                         drawTable(table);
                     }
                 }
@@ -176,7 +178,7 @@ public class MainFrame extends JFrame {
         });
     }
 
-    public static void drawTable(JTable table) {
+    private void drawTable(JTable table) {
         centerTablePanel.removeAll();
         centerTablePanel.revalidate();
         JScrollPane scrollPane = new JScrollPane(table);

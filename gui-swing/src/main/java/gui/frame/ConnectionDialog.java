@@ -1,7 +1,6 @@
 package gui.frame;
 
-import gui.Main;
-import gui.table.util.PropertyUtility;
+import gui.util.PropertyUtility;
 
 import javax.swing.*;
 import java.awt.*;

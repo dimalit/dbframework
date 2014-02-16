@@ -12,44 +12,20 @@ import java.util.Map;
 
 @SuppressWarnings("serial")
 public class DataTableModel extends AbstractTableModel {
-	
-	private Map<String, List<String>> data;
+
+    private Map<String, List<String>> data;
 	private List<String> columnNames;
+    private TableItem tableItem;
 
-    private Service service = (Service) Main.context.getBean("service");
-
-    private String tableName;
-	
-	public DataTableModel(TableItem item) {
-        this.tableName = item.getName();
-        this.data = service.getDataForTableItem(item);
+	public DataTableModel(TableItem item, Map<String, List<String>> data) {
+        this.tableItem = item;
+        this.data = data;
 		this.columnNames = new ArrayList<String>();
-        prepareColumnNames(item);
+        prepareColumnNames();
     }
 
-    public DataTableModel(TableItem tableItem, List<String> links, ColumnItem column, String referTable) {
-        this.tableName = tableItem.getName();
-        this.data = service.getDataByRows(tableItem, links, column, referTable);
-        this.columnNames = new ArrayList<String>();
-        prepareColumnNames(tableItem);
-    }
-
-    public DataTableModel(TableItem tableItem, String primaryKey, String indexColumn) {
-        this.tableName = tableItem.getName();
-        this.data = service.getDataByRelationColumn(tableItem, primaryKey, indexColumn);
-        this.columnNames = new ArrayList<String>();
-        prepareColumnNames(tableItem);
-    }
-
-    private void prepareColumnNames(TableItem item) {
-        for (ColumnItem columnItem : item.getColumns()) {
-            if (columnItem.getAlias() != null) {
-                if (!columnItem.getAlias().equals(""))
-                    this.columnNames.add(columnItem.getAlias());
-            } else {
-                this.columnNames.add(columnItem.getName());
-            }
-        }
+    private void prepareColumnNames() {
+        columnNames.addAll(data.keySet());
     }
 
 	@Override
@@ -73,7 +49,8 @@ public class DataTableModel extends AbstractTableModel {
 		return data.get(column).get(rowIndex);
 	}
 
-    public String getTableName() {
-        return tableName;
+    public TableItem getTableItem() {
+        return tableItem;
     }
+
 }

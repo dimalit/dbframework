@@ -8,10 +8,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class Dao {
@@ -26,20 +23,18 @@ public class Dao {
         final ResultSetExtractor<Map<String, List<String>>> rse = new ResultSetExtractor<Map<String, List<String>>>() {
             @Override
             public Map<String, List<String>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                Map<String, List<String>> data = new HashMap<String, List<String>>();
+                Map<String, List<String>> data = new LinkedHashMap<String, List<String>>();
 
                 ResultSetMetaData rsmd = resultSet.getMetaData();
                 int columnsCount = rsmd.getColumnCount();
 
                 for (int i = 1; i <= columnsCount; i++) {
                     ArrayList<String> colData = new ArrayList<String>();
-                    if (resultSet.first()) {
-                        while (resultSet.next()) {
-                            colData.add(resultSet.getString(i));
-                        }
-                        data.put(rsmd.getColumnLabel(i), colData);
-                        resultSet.beforeFirst();
+                    while (resultSet.next()) {
+                        colData.add(resultSet.getString(i));
                     }
+                    data.put(rsmd.getColumnLabel(i), colData);
+                    resultSet.beforeFirst();
                 }
                 return data;
             }

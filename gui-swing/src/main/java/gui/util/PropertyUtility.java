@@ -1,4 +1,4 @@
-package gui.table.util;
+package gui.util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

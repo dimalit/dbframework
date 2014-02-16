@@ -38,6 +38,10 @@ public class DatabaseBean {
         return tablesMap;
     }
 
+    public TableItem getTableByName(String name) {
+        return createTablesMap().get(name);
+    }
+
     public List<String> tablesAsStringList() {
         ArrayList<String> tables = new ArrayList<String>();
         for (TableItem item : getTables()) {
@@ -46,7 +50,7 @@ public class DatabaseBean {
         return tables;
     }
 
-    public Map<String, ColumnItem> externalReferencesForTable(String tableName) {
+    public Map<String, ColumnItem> internalRelationsForTable(String tableName) {
         Map<String, ColumnItem> extReferenceTables = new HashMap<String, ColumnItem>();
         for (TableItem tableItem: getTables()) {
             for (ColumnItem columnItem : tableItem.getColumns()) {

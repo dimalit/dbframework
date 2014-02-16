@@ -8,13 +8,6 @@ import edu.dbframework.parse.beans.items.TableItem;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: GreenPoser
- * Date: 15.06.13
- * Time: 13:03
- * To change this template use File | Settings | File Templates.
- */
 public class Service {
 
     private SqlQueryBuilder sqlQueryBuilder;

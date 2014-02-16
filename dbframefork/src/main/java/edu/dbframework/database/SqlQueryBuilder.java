@@ -44,7 +44,7 @@ public class SqlQueryBuilder {
 
     private void performSelectQuery(TableItem tableItem) {
         query = new SelectQuery();
-        Map<String, ColumnItem> extRefs = new DatabaseManager().getDatabaseBean().externalReferencesForTable(tableItem.getName());
+        Map<String, ColumnItem> extRefs = new DatabaseManager().getDatabaseBean().internalRelationsForTable(tableItem.getName());
 
         /*-------Columns------*/
         for (ColumnItem item : tableItem.getColumns()) {
@@ -60,7 +60,8 @@ public class SqlQueryBuilder {
 
         if (extRefs.size() > 0) {
             for (String table : extRefs.keySet()) {
-                query.addCustomColumns(FunctionCall.count().addCustomParams(new CustomSql( table + "." + extRefs.get(table).getName())));
+                query.addCustomColumns(new CustomSql(
+                        FunctionCall.count().addCustomParams(new CustomSql(table + "." + extRefs.get(table).getName())) + " as " + table));
             }
         }
         query.addCustomFromTable(new CustomSql(tableItem.getName()));

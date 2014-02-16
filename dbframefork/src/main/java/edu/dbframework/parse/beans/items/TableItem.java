@@ -15,8 +15,6 @@ import java.util.Map;
  */
 public class TableItem {
 
-    private ColumnItem primaryKey;
-
     private String name;
     private List<ColumnItem> columns = new ArrayList<ColumnItem>();
     public TableItem() {
@@ -27,11 +25,12 @@ public class TableItem {
 	}
 
     public ColumnItem getPrimaryKey() {
-        return primaryKey;
-    }
-
-    public void setPrimaryKey(ColumnItem primaryKey) {
-        this.primaryKey = primaryKey;
+        for (ColumnItem item : columns) {
+            if (item.getPrimaryKey()) {
+                return item;
+            }
+        }
+        return null;
     }
 
 	public void setColumns(List<ColumnItem> columns) {
@@ -94,6 +93,10 @@ public class TableItem {
             columnsMap.put(columnItem.getName(), columnItem);
         }
         return columnsMap;
+    }
+
+    public ColumnItem getColumnByName(String name) {
+        return columnsAsMap().get(name);
     }
 
     @Override

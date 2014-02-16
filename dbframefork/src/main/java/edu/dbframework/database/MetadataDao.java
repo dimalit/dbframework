@@ -111,8 +111,10 @@ public class MetadataDao {
 				ColumnItem columnItem = new ColumnItem();
 				columnItem.setName(column);
                 for (String primaryKey : primaryKeys) {
-                    if (column.equals(primaryKey))
+                    if (column.equals(primaryKey)) {
                         columnItem.setPrimaryKey(true);
+                        break;
+                    }
                 }
 				columns.add(columnItem);
 			}

@@ -3,20 +3,25 @@ package gui.table;
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
-import gui.frame.MainFrame;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataTable extends JTable {
+
+
+    DatabaseManager databaseManager;
+    DataTableManager tableManager;
 
     public DataTable(DataTableModel tableModel) {
         super(tableModel);
@@ -27,90 +32,97 @@ public class DataTable extends JTable {
         renderListeners();
     }
 
-    public void renderListeners() {
+    public void setDataTableModel(TableModel dataModel) {
+        super.setModel(dataModel);
+        renderListeners();
+    }
 
-        /* Different color to linked column headers */
+    public void renderListeners() {
+        prepareInternalRelationsListener();
+        prepareExternalRelationsListener();
+    }
+
+    private void prepareExternalRelationsListener() {
+        /* different color for external relation column */
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setBackground(Color.LIGHT_GRAY);
-        final DatabaseManager databaseManager = new DatabaseManager();
 
-        final DataTableModel model = (DataTableModel) this.getModel();
-        final HashMap<Integer, ColumnItem> relationColumns = new HashMap<Integer, ColumnItem>();
-        final TableItem thisTable = databaseManager.getDatabaseBean().createTablesMap().get(model.getTableName());
+        DataTableModel model = (DataTableModel) this.getModel();
+        final TableItem tableItem = model.getTableItem();
+        final HashMap<Integer, ColumnItem> relationColumnsByIndex = new HashMap<Integer, ColumnItem>();
 
-        for (int i = 0; i <thisTable.getColumns().size(); i++) {
-            List<ColumnItem> columns = thisTable.getColumns();
-            ColumnItem columnItem = columns.get(i);
+        /* get indexes of relation columns */
+        for (int i = 0; i <tableItem.getColumns().size(); i++) {
+            ColumnItem columnItem = tableItem.getColumns().get(i);
             if (columnItem.getRelationTableName() != null && !columnItem.getRelationTableName().equals("")
                     && columnItem.getRelationColumnName() != null && !columnItem.getRelationColumnName().equals("")) {
                 getColumnModel().getColumn(i).setHeaderRenderer(cellRenderer);
-                relationColumns.put(i, columnItem);
+                relationColumnsByIndex.put(i, columnItem);
             }
         }
+
         this.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                int index = convertColumnIndexToModel(columnAtPoint(mouseEvent.getPoint()));
-                if (relationColumns.containsKey(index)) {
+            public void mouseClicked(MouseEvent e) {
+                int index = convertColumnIndexToModel(columnAtPoint(e.getPoint()));
+                if (relationColumnsByIndex.containsKey(index)) {
                     int[] selectedRows = DataTable.this.getSelectedRows();
-                    ColumnItem columnItem = relationColumns.get(index);
-                    TableItem creatingTableItem = databaseManager.getDatabaseBean().createTablesMap().get(columnItem.getRelationTableName());
+                    ColumnItem columnItem = relationColumnsByIndex.get(index);
+                    TableItem creatingTableItem = databaseManager.getDatabaseBean().getTableByName(columnItem.getRelationTableName());
                     if (selectedRows.length >= 1) {
                         List<String> rows = new ArrayList<String>();
                         for (int i = 0; i < selectedRows.length; i++) {
                             rows.add((String) getModel().getValueAt(selectedRows[i], index));
                         }
-                        DataTable table = new DataTable(new DataTableModel(creatingTableItem, rows, columnItem, model.getTableName()));
-                        MainFrame.drawTable(table);
+                        setDataTableModel(tableManager.getExternalRelationDataModel(creatingTableItem, rows, columnItem, tableItem.getName()));
                     } else {
-                        DataTable table = new DataTable(new DataTableModel(creatingTableItem));
-                        MainFrame.drawTable(table);
+                        setDataTableModel(tableManager.getTableItemDataModel(creatingTableItem));
                     }
-                    System.out.println("Clicked on column " + index + " " + DataTable.this.getSelectedRow());
                 }
             }
         });
+    }
 
-        if (this.getModel().getColumnCount() > thisTable.getColumns().size()) {
+    private void prepareInternalRelationsListener() {
+
+        final DataTableModel model = (DataTableModel) this.getModel();
+        final TableItem tableItem = model.getTableItem();
+
+        if (this.getModel().getColumnCount() > tableItem.getColumns().size()) {
+            /* different color for internal relation columns */
+            DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+            cellRenderer.setBackground(Color.DARK_GRAY);
+
             this.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent e) {
-                    if (e.getValueIsAdjusting()) {
+                    if (!e.getValueIsAdjusting()) {
                         int selectedColumn = getColumnModel().getSelectionModel().getLeadSelectionIndex();
-                        int k = thisTable.getColumns().size();
-                        while(k != DataTable.this.getModel().getColumnCount()) {
-                            if (getColumnModel().getSelectionModel().getLeadSelectionIndex() == k) {
-                                String columnName = DataTable.this.getColumnName(selectedColumn);
-                                String table = columnName.substring(columnName.lastIndexOf("_") + 1);
-                                TableItem tableItem1 = databaseManager.getDatabaseBean().createTablesMap().get(table);
-                                String indexColumn = null;
-                                for (ColumnItem columnItem : tableItem1.getColumns()) {
+                        int columnCount = tableItem.getColumns().size();
+                        for (int i = columnCount; i < model.getColumnCount(); i++) {
+                            if (getColumnModel().getSelectionModel().getLeadSelectionIndex() == i) {
+                                // in internal relations by default column name is table name7
+                                String tableName = DataTable.this.getColumnName(selectedColumn);
+                                TableItem relationTableItem = databaseManager.getDatabaseBean().getTableByName(tableName);
+
+                                String relationColumnName = "";
+                                for (ColumnItem columnItem : relationTableItem.getColumns()) {
                                     if (columnItem.getRelationTableName() != null) {
-                                        if (columnItem.getRelationTableName().equals(thisTable.getName()))
-                                            indexColumn = columnItem.getName();
+                                        if (columnItem.getRelationTableName().equals(tableItem.getName())) {
+                                            relationColumnName = columnItem.getName();
+                                            break;
+                                        }
                                     }
                                 }
-
-                                String primaryKey = null;
-                                ColumnItem primaryKeyColumn = null;
-                                for (ColumnItem columnItem : thisTable.getColumns()) {
-                                    if (columnItem.getPrimaryKey()) {
-                                        primaryKeyColumn = columnItem;
+                                String primaryKey = "";
+                                for (int j = 0; j < model.getColumnCount(); j++) {
+                                    if (model.getColumnName(j).equals(tableItem.getPrimaryKey().getName())) {
+                                        primaryKey = (String) model.getValueAt(DataTable.this.getSelectionModel().getLeadSelectionIndex(), j);
                                         break;
                                     }
                                 }
-                                for (int i = 0; i < DataTable.this.getModel().getColumnCount(); i++) {
-                                    if (DataTable.this.getModel().getColumnName(i).equals(primaryKeyColumn.getName())) {
-                                        primaryKey = (String) DataTable.this.getModel().getValueAt(
-                                                DataTable.this.getSelectionModel().getLeadSelectionIndex(), i);
-                                    }
-                                }
-
-                                DataTable dataTable = new DataTable(new DataTableModel(tableItem1, primaryKey, indexColumn));
-                                MainFrame.drawTable(dataTable);
-                                System.out.println(table + " " + getSelectionModel().getLeadSelectionIndex());
+                                setDataTableModel(tableManager.getInternalRelationDataModel(relationTableItem, primaryKey, relationColumnName));
                             }
-                            k++;
                         }
                     }
                 }
