@@ -79,9 +79,9 @@ public class SqlQueryBuilder {
                         BinaryCondition.equalTo(new CustomSql(table + "." + extRefs.get(table).getName()),
                                 new CustomSql(tableItem.getName() + "." + metadataDao.getPrimaryKeyColumns(tableItem.getName()).get(0))));
             }
+            /*-------Group by------*/
+            query.addCustomGroupings(new CustomSql(tableItem.getName() + "." + tableItem.getColumns().get(0).getName()));
         }
-        /*-------Group by------*/
-        query.addCustomGroupings(new CustomSql(tableItem.getName() + "." + tableItem.getColumns().get(0).getName()));
     }
 
     public void setMetadataDao(MetadataDao metadataDao) {

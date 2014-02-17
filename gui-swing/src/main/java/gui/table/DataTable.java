@@ -20,8 +20,8 @@ import java.util.Map;
 public class DataTable extends JTable {
 
 
-    DatabaseManager databaseManager;
-    DataTableManager tableManager;
+    DatabaseManager databaseManager = new DatabaseManager();
+    DataTableManager tableManager = new DataTableManager();
 
     public DataTable(DataTableModel tableModel) {
         super(tableModel);
