@@ -1,10 +1,10 @@
-package gui.table;
+package edu.gui.table;
 
 
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.service.Service;
-import gui.Main;
+import edu.gui.Main;
 
 import java.util.List;
 
@@ -19,8 +19,8 @@ public class DataTableManager {
         return new DataTableModel(tableItem, service.getDataForTableItem(tableItem));
     }
 
-    public DataTableModel getExternalRelationDataModel(TableItem tableItem, List<String> links, ColumnItem column, String referTable) {
-        return new DataTableModel(tableItem, service.getDataByRows(tableItem, links, column, referTable));
+    public DataTableModel getOutgoingRelationDataModel(TableItem tableItem, List<String> links, ColumnItem column) {
+        return new DataTableModel(tableItem, service.getDataByRows(tableItem, links, column));
     }
 
     public DataTableModel getInternalRelationDataModel(TableItem tableItem, String primaryKey, String indexColumn) {

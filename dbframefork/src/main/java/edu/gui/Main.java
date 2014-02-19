@@ -1,6 +1,6 @@
-package gui;
+package edu.gui;
 
-import gui.frame.MainFrame;
+import edu.gui.frame.MainFrame;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

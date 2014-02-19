@@ -20,12 +20,12 @@ public class Service {
         return dao.getData(sqlQueryBuilder.buildQueryForTableItem(tableItem));
     }
 
-    public Map<String, List<String>> getDataByRows(TableItem tableItem, List<String> rows, ColumnItem bindingColumn, String relTable) {
-        return dao.getData(sqlQueryBuilder.buildQueryByRows(tableItem, rows, bindingColumn, relTable));
+    public Map<String, List<String>> getDataByRows(TableItem tableItem, List<String> rows, ColumnItem bindingColumn) {
+        return dao.getData(sqlQueryBuilder.buildQueryForOutgoingRelationByRows(tableItem, rows, bindingColumn));
     }
 
     public Map<String, List<String>> getDataByRelationColumn(TableItem tableItem, String primaryKey, String indexColumn) {
-        return dao.getData(sqlQueryBuilder.buildQueryByRelationColumn(tableItem, primaryKey, indexColumn));
+        return dao.getData(sqlQueryBuilder.buildQueryForIncomingRelationByColumn(tableItem, primaryKey, indexColumn));
     }
 
     public SqlQueryBuilder getSqlQueryBuilder() {

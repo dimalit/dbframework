@@ -1,9 +1,6 @@
-package gui.table;
+package edu.gui.table;
 
-import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
-import edu.dbframework.service.Service;
-import gui.Main;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

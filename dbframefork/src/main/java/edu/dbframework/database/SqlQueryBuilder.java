@@ -25,7 +25,7 @@ public class SqlQueryBuilder {
         return query.validate().toString();
     }
 
-    public String buildQueryByRows(TableItem tableItem, List<String> rows, ColumnItem bindingColumn, String relTable) {
+    public String buildQueryForOutgoingRelationByRows(TableItem tableItem, List<String> rows, ColumnItem bindingColumn) {
         performSelectQuery(tableItem);
 
         query.addCondition(new InCondition(new CustomSql(bindingColumn.getRelationTableName() + "." + bindingColumn.getRelationColumnName()), rows));
@@ -33,10 +33,10 @@ public class SqlQueryBuilder {
         return query.toString();
     }
 
-    public String buildQueryByRelationColumn(TableItem tableItem, String primaryKey, String indexColumn) {
+    public String buildQueryForIncomingRelationByColumn(TableItem tableItem, String primaryKey, String relationColumn) {
         performSelectQuery(tableItem);
 
-        query.addCondition(BinaryCondition.equalTo(new CustomSql(tableItem.getName() + "." + indexColumn),
+        query.addCondition(BinaryCondition.equalTo(new CustomSql(tableItem.getName() + "." + relationColumn),
                 new CustomSql(primaryKey)));
 
         return query.toString();

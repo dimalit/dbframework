@@ -10,22 +10,8 @@
         <spring-jdbc.version>3.2.4.RELEASE</spring-jdbc.version>
         <sqlbuilder.version>2.0.0</sqlbuilder.version>
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-        <gui.project.path>C:\Users\bondarets\diplom\gui-swing\lib</gui.project.path>
         <spring-context.version>3.1.2.RELEASE</spring-context.version>
     </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <configuration>
-                    <outputDirectory>${gui.project.path}</outputDirectory>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
         <dependency>

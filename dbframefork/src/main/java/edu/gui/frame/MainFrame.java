@@ -1,14 +1,12 @@
-package gui.frame;
+package edu.gui.frame;
 
 import edu.dbframework.database.MetadataDao;
 import edu.dbframework.parse.beans.DatabaseBean;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
-import gui.Main;
-import gui.table.DataTable;
-import gui.table.DataTableManager;
-import gui.table.DataTableModel;
-import org.springframework.beans.factory.annotation.Autowired;
+import edu.gui.Main;
+import edu.gui.table.DataTable;
+import edu.gui.table.DataTableManager;
 
 import javax.sql.DataSource;
 import javax.swing.*;

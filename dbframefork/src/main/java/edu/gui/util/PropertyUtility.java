@@ -1,4 +1,4 @@
-package gui.util;
+package edu.gui.util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

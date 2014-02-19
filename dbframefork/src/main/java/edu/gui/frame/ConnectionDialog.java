@@ -1,6 +1,6 @@
-package gui.frame;
+package edu.gui.frame;
 
-import gui.util.PropertyUtility;
+import edu.gui.util.PropertyUtility;
 
 import javax.swing.*;
 import java.awt.*;

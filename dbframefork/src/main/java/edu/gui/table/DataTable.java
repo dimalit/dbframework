@@ -1,4 +1,4 @@
-package gui.table;
+package edu.gui.table;
 
 import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
@@ -15,7 +15,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DataTable extends JTable {
 
@@ -74,7 +73,7 @@ public class DataTable extends JTable {
                         for (int i = 0; i < selectedRows.length; i++) {
                             rows.add((String) getModel().getValueAt(selectedRows[i], index));
                         }
-                        setDataTableModel(tableManager.getExternalRelationDataModel(creatingTableItem, rows, columnItem, tableItem.getName()));
+                        setDataTableModel(tableManager.getOutgoingRelationDataModel(creatingTableItem, rows, columnItem));
                     } else {
                         setDataTableModel(tableManager.getTableItemDataModel(creatingTableItem));
                     }
@@ -93,40 +92,45 @@ public class DataTable extends JTable {
             DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
             cellRenderer.setBackground(Color.DARK_GRAY);
 
-            this.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    if (!e.getValueIsAdjusting()) {
-                        int selectedColumn = getColumnModel().getSelectionModel().getLeadSelectionIndex();
-                        int columnCount = tableItem.getColumns().size();
-                        for (int i = columnCount; i < model.getColumnCount(); i++) {
-                            if (getColumnModel().getSelectionModel().getLeadSelectionIndex() == i) {
-                                // in internal relations by default column name is table name7
-                                String tableName = DataTable.this.getColumnName(selectedColumn);
-                                TableItem relationTableItem = databaseManager.getDatabaseBean().getTableByName(tableName);
+            addRowClickListener(model, tableItem);
 
-                                String relationColumnName = "";
-                                for (ColumnItem columnItem : relationTableItem.getColumns()) {
-                                    if (columnItem.getRelationTableName() != null) {
-                                        if (columnItem.getRelationTableName().equals(tableItem.getName())) {
-                                            relationColumnName = columnItem.getName();
-                                            break;
-                                        }
-                                    }
-                                }
-                                String primaryKey = "";
-                                for (int j = 0; j < model.getColumnCount(); j++) {
-                                    if (model.getColumnName(j).equals(tableItem.getPrimaryKey().getName())) {
-                                        primaryKey = (String) model.getValueAt(DataTable.this.getSelectionModel().getLeadSelectionIndex(), j);
+        }
+    }
+
+    private void addRowClickListener(final DataTableModel model, final TableItem tableItem) {
+        this.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedColumn = getColumnModel().getSelectionModel().getLeadSelectionIndex();
+                    int columnCount = tableItem.getColumns().size();
+                    for (int i = columnCount; i < model.getColumnCount(); i++) {
+                        if (getColumnModel().getSelectionModel().getLeadSelectionIndex() == i) {
+                            // in internal relations by default column name is table name7
+                            String tableName = DataTable.this.getColumnName(selectedColumn);
+                            TableItem relationTableItem = databaseManager.getDatabaseBean().getTableByName(tableName);
+
+                            String relationColumnName = "";
+                            for (ColumnItem columnItem : relationTableItem.getColumns()) {
+                                if (columnItem.getRelationTableName() != null) {
+                                    if (columnItem.getRelationTableName().equals(tableItem.getName())) {
+                                        relationColumnName = columnItem.getName();
                                         break;
                                     }
                                 }
-                                setDataTableModel(tableManager.getInternalRelationDataModel(relationTableItem, primaryKey, relationColumnName));
                             }
+                            String primaryKey = "";
+                            for (int j = 0; j < model.getColumnCount(); j++) {
+                                if (model.getColumnName(j).equals(tableItem.getPrimaryKey().getName())) {
+                                    primaryKey = (String) model.getValueAt(DataTable.this.getSelectionModel().getLeadSelectionIndex(), j);
+                                    break;
+                                }
+                            }
+                            setDataTableModel(tableManager.getInternalRelationDataModel(relationTableItem, primaryKey, relationColumnName));
                         }
                     }
                 }
-            });
-        }
+            }
+        });
     }
 }

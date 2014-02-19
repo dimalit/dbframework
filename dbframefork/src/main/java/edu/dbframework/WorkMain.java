@@ -1,24 +1,15 @@
 package edu.dbframework;
 
+import edu.dbframework.database.Dao;
 import edu.dbframework.database.SqlQueryBuilder;
 import edu.dbframework.parse.beans.DatabaseBean;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.parsers.GenericParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.support.DatabaseMetaDataCallback;
-import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
 
-import javax.sql.DataSource;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,9 +37,9 @@ public class WorkMain {
 
         GenericParser ap = new GenericParser("database.xml");
         DatabaseBean xmlBean = (DatabaseBean)ap.getBeanFromXML(DatabaseBean.class);
-        TableItem ti = xmlBean.getTables().get(1);
+        TableItem ti = xmlBean.getTables().get(3);
 
-        SqlQueryBuilder sqb = new SqlQueryBuilder();
+
 
 
 //        // --------- test query for table item
@@ -60,7 +51,7 @@ public class WorkMain {
         rows.add("lol");
         rows.add("ppwwppw");
 
-        System.out.print(sqb.buildQueryByRows(ti, rows, ti.getColumns().get(1), "relTable"));*/
+        System.out.print(sqb.buildQueryForOutgoingRelationByRows(ti, rows, ti.getColumns().get(1), "relTable"));*/
 
         /*Dao dao = new Dao();
         System.out.print(dao.getData(sqb.buildQueryForTableItem(ti)));*/
@@ -70,26 +61,9 @@ public class WorkMain {
         ApplicationContext context =
                 new ClassPathXmlApplicationContext("databaseContext.xml");
 
-        DataSource dataSource = (DataSource) context.getBean("dataSource");
-        Collection col = (Collection) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
-            @Override
-            public Object processMetaData(DatabaseMetaData databaseMetaData) throws SQLException, MetaDataAccessException {
-
-                ResultSetExtractor rse = new ResultSetExtractor<List<String>>() {
-                    @Override
-                    public List<String> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                        List<String> list = new ArrayList<String>();
-                        while (resultSet.next()) {
-                            list.add(resultSet.getString("TABLE_NAME"));
-                        }
-                        return list;
-                    }
-                };
-                return rse.extractData(databaseMetaData.getTables(null, null, null, new String[] {"TABLE"}));
-            }
-        });
-
-        System.out.print(col);
+        SqlQueryBuilder sqb = (SqlQueryBuilder) context.getBean("sqlBuilder");
+        Dao dao = (Dao) context.getBean("dao");
+        System.out.print(dao.getData(sqb.buildQueryForTableItem(ti)));
     }
 }
 
