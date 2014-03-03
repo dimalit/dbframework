@@ -1,9 +1,11 @@
 package edu.gui.table;
 
+import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,28 @@ public class DataTableModel extends AbstractTableModel {
 
     public TableItem getTableItem() {
         return tableItem;
+    }
+
+    public Map<Integer, ColumnItem> getOutgoingColumnsByIndex() {
+        Map<Integer, ColumnItem> result = new HashMap<Integer, ColumnItem>();
+        for (int i = 0; i <tableItem.getColumns().size(); i++) {
+            ColumnItem columnItem = tableItem.getColumns().get(i);
+            if (columnItem.getRelationTableName() != null && !columnItem.getRelationTableName().equals("")
+                    && columnItem.getRelationColumnName() != null && !columnItem.getRelationColumnName().equals("")) {
+                result.put(i, columnItem);
+            }
+        }
+        return result;
+    }
+
+    public List<Integer> getIncomingColumnIndexes() {
+        List<Integer> result = new ArrayList<Integer>();
+        if (data.size() > tableItem.getColumns().size()) {
+            for (int i = tableItem.getColumns().size(); i < data.size(); i++) {
+                result.add(i);
+            }
+        }
+        return result;
     }
 
 }

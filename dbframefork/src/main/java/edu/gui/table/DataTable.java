@@ -13,11 +13,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataTable extends JTable {
-
 
     DatabaseManager databaseManager = new DatabaseManager();
     DataTableManager tableManager = new DataTableManager();
@@ -37,27 +36,22 @@ public class DataTable extends JTable {
     }
 
     public void renderListeners() {
-        prepareInternalRelationsListener();
+        prepareInternalRelationsListeners();
         prepareExternalRelationsListener();
     }
 
     private void prepareExternalRelationsListener() {
-        /* different color for external relation column */
+        /* different color for outgoing relation column */
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setBackground(Color.LIGHT_GRAY);
 
         DataTableModel model = (DataTableModel) this.getModel();
         final TableItem tableItem = model.getTableItem();
-        final HashMap<Integer, ColumnItem> relationColumnsByIndex = new HashMap<Integer, ColumnItem>();
+        final Map<Integer, ColumnItem> relationColumnsByIndex = model.getOutgoingColumnsByIndex();
 
-        /* get indexes of relation columns */
-        for (int i = 0; i <tableItem.getColumns().size(); i++) {
-            ColumnItem columnItem = tableItem.getColumns().get(i);
-            if (columnItem.getRelationTableName() != null && !columnItem.getRelationTableName().equals("")
-                    && columnItem.getRelationColumnName() != null && !columnItem.getRelationColumnName().equals("")) {
-                getColumnModel().getColumn(i).setHeaderRenderer(cellRenderer);
-                relationColumnsByIndex.put(i, columnItem);
-            }
+        // different color for header
+        for (Integer index : relationColumnsByIndex.keySet()) {
+            getColumnModel().getColumn(index).setHeaderRenderer(cellRenderer);
         }
 
         this.getTableHeader().addMouseListener(new MouseAdapter() {
@@ -82,18 +76,23 @@ public class DataTable extends JTable {
         });
     }
 
-    private void prepareInternalRelationsListener() {
+    private void prepareInternalRelationsListeners() {
 
         final DataTableModel model = (DataTableModel) this.getModel();
         final TableItem tableItem = model.getTableItem();
 
         if (this.getModel().getColumnCount() > tableItem.getColumns().size()) {
-            /* different color for internal relation columns */
+            /* different color for incoming relation columns */
             DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
             cellRenderer.setBackground(Color.DARK_GRAY);
 
+            List<Integer> relationColumnIndexes = model.getIncomingColumnIndexes();
+            // different color for header
+            for (Integer index : relationColumnIndexes) {
+                getColumnModel().getColumn(index).setHeaderRenderer(cellRenderer);
+            }
             addRowClickListener(model, tableItem);
-
+            addHeaderListener();
         }
     }
 
@@ -132,5 +131,25 @@ public class DataTable extends JTable {
                 }
             }
         });
+    }
+
+    private void addHeaderListener() {
+    }
+
+    private List<Integer> getSelectedPrimaryKeys() {
+        List<Integer> keys = new ArrayList<Integer>();
+        int[] selectedRows = this.getSelectedRows();
+        DataTableModel model = (DataTableModel) this.getModel();
+        int primaryKeyColumnIndex = 0;
+        for (int i = 0; i < model.getTableItem().getColumns().size(); i++) {
+            if (model.getTableItem().getColumns().get(i).getPrimaryKey()) {
+                primaryKeyColumnIndex = i;
+                break;
+            }
+        }
+        for (Integer row : selectedRows) {
+            keys.add(new Integer(this.getValueAt(row, primaryKeyColumnIndex).toString()));
+        }
+        return keys;
     }
 }
