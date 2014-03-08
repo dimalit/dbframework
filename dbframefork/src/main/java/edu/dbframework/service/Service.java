@@ -24,8 +24,8 @@ public class Service {
         return dao.getData(sqlQueryBuilder.buildQueryForOutgoingRelationByRows(tableItem, rows, bindingColumn));
     }
 
-    public Map<String, List<String>> getDataByRelationColumn(TableItem tableItem, String primaryKey, String indexColumn) {
-        return dao.getData(sqlQueryBuilder.buildQueryForIncomingRelationByColumn(tableItem, primaryKey, indexColumn));
+    public Map<String, List<String>> getDataByRelationColumn(TableItem tableItem, List<String> primaryKeys, String indexColumn) {
+        return dao.getData(sqlQueryBuilder.buildQueryForIncomingRelationByColumn(tableItem, primaryKeys, indexColumn));
     }
 
     public SqlQueryBuilder getSqlQueryBuilder() {

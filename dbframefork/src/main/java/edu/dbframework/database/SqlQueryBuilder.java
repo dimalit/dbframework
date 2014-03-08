@@ -33,11 +33,10 @@ public class SqlQueryBuilder {
         return query.toString();
     }
 
-    public String buildQueryForIncomingRelationByColumn(TableItem tableItem, String primaryKey, String relationColumn) {
+    public String buildQueryForIncomingRelationByColumn(TableItem tableItem, List<String> primaryKeys, String relationColumn) {
         performSelectQuery(tableItem);
 
-        query.addCondition(BinaryCondition.equalTo(new CustomSql(tableItem.getName() + "." + relationColumn),
-                new CustomSql(primaryKey)));
+        query.addCondition(new InCondition(new CustomSql(tableItem.getName() + "." + relationColumn), primaryKeys));
 
         return query.toString();
     }

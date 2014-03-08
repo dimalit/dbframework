@@ -92,7 +92,7 @@ public class DataTable extends JTable {
                 getColumnModel().getColumn(index).setHeaderRenderer(cellRenderer);
             }
             addRowClickListener(model, tableItem);
-            addHeaderListener();
+            addHeaderListener(model, tableItem);
         }
     }
 
@@ -105,7 +105,7 @@ public class DataTable extends JTable {
                     int columnCount = tableItem.getColumns().size();
                     for (int i = columnCount; i < model.getColumnCount(); i++) {
                         if (getColumnModel().getSelectionModel().getLeadSelectionIndex() == i) {
-                            // in internal relations by default column name is table name7
+                            // in incoming relations by default column name is table name7
                             String tableName = DataTable.this.getColumnName(selectedColumn);
                             TableItem relationTableItem = databaseManager.getDatabaseBean().getTableByName(tableName);
 
@@ -118,10 +118,10 @@ public class DataTable extends JTable {
                                     }
                                 }
                             }
-                            String primaryKey = "";
+                            List<String> primaryKey = new ArrayList<String>();
                             for (int j = 0; j < model.getColumnCount(); j++) {
                                 if (model.getColumnName(j).equals(tableItem.getPrimaryKey().getName())) {
-                                    primaryKey = (String) model.getValueAt(DataTable.this.getSelectionModel().getLeadSelectionIndex(), j);
+                                    primaryKey.add((String) model.getValueAt(DataTable.this.getSelectionModel().getLeadSelectionIndex(), j));
                                     break;
                                 }
                             }
@@ -133,11 +133,36 @@ public class DataTable extends JTable {
         });
     }
 
-    private void addHeaderListener() {
+    private void addHeaderListener(DataTableModel model, final TableItem tableItem) {
+        final List<Integer> incomingColumnIndexes = model.getIncomingColumnIndexes();
+        this.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = convertColumnIndexToModel(columnAtPoint(e.getPoint()));
+                if (incomingColumnIndexes.contains(index))
+                {
+                    List<String> selectedPrimaryKeys = getSelectedPrimaryKeys();
+                    String tableName = DataTable.this.getColumnName(index);
+                    TableItem relationTableItem = databaseManager.getDatabaseBean().getTableByName(tableName);
+
+                    String relationColumnName = "";
+                    for (ColumnItem columnItem : relationTableItem.getColumns()) {
+                        if (columnItem.getRelationTableName() != null) {
+                            if (columnItem.getRelationTableName().equals(tableItem.getName())) {
+                                relationColumnName = columnItem.getName();
+                                break;
+                            }
+                        }
+                    }
+                    setDataTableModel(tableManager.getInternalRelationDataModel(relationTableItem, selectedPrimaryKeys, relationColumnName));
+                }
+
+            }
+        });
     }
 
-    private List<Integer> getSelectedPrimaryKeys() {
-        List<Integer> keys = new ArrayList<Integer>();
+    private List<String> getSelectedPrimaryKeys() {
+        List<String> keys = new ArrayList<String>();
         int[] selectedRows = this.getSelectedRows();
         DataTableModel model = (DataTableModel) this.getModel();
         int primaryKeyColumnIndex = 0;
@@ -148,7 +173,7 @@ public class DataTable extends JTable {
             }
         }
         for (Integer row : selectedRows) {
-            keys.add(new Integer(this.getValueAt(row, primaryKeyColumnIndex).toString()));
+            keys.add(this.getValueAt(row, primaryKeyColumnIndex).toString());
         }
         return keys;
     }

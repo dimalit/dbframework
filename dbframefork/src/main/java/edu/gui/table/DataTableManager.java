@@ -23,7 +23,7 @@ public class DataTableManager {
         return new DataTableModel(tableItem, service.getDataByRows(tableItem, links, column));
     }
 
-    public DataTableModel getInternalRelationDataModel(TableItem tableItem, String primaryKey, String indexColumn) {
-        return new DataTableModel(tableItem, service.getDataByRelationColumn(tableItem, primaryKey, indexColumn));
+    public DataTableModel getInternalRelationDataModel(TableItem tableItem, List<String> primaryKeys, String indexColumn) {
+        return new DataTableModel(tableItem, service.getDataByRelationColumn(tableItem, primaryKeys, indexColumn));
     }
 }
