@@ -9,6 +9,7 @@ import edu.dbframework.parse.beans.items.ColumnItem;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,28 +17,29 @@ public class SqlQueryBuilder {
 
     private SelectQuery query;
     private MetadataDao metadataDao;
+    private LinkedHashMap<String, String> queryQueue = new LinkedHashMap<String, String>();
 
     public SqlQueryBuilder() {
     }
 
     public String buildQueryForTableItem(TableItem tableItem) {
         performSelectQuery(tableItem);
+        queryQueue.clear();
+        queryQueue.put(tableItem.getName(), query.validate().toString());
         return query.validate().toString();
     }
 
     public String buildQueryForOutgoingRelationByRows(TableItem tableItem, List<String> rows, ColumnItem bindingColumn) {
         performSelectQuery(tableItem);
-
         query.addCondition(new InCondition(new CustomSql(bindingColumn.getRelationTableName() + "." + bindingColumn.getRelationColumnName()), rows));
-
+        queryQueue.put(tableItem.getName() + " (outgoing rows)", query.validate().toString());
         return query.toString();
     }
 
     public String buildQueryForIncomingRelationByColumn(TableItem tableItem, List<String> primaryKeys, String relationColumn) {
         performSelectQuery(tableItem);
-
         query.addCondition(new InCondition(new CustomSql(tableItem.getName() + "." + relationColumn), primaryKeys));
-
+        queryQueue.put(tableItem.getName() + " (incoming rows)", query.validate().toString());
         return query.toString();
     }
 
