@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public class PropertyUtility {
 
-    private final static String propertyPath = "src/main/resources/jdbc.properties";
+    private final static String propertyPath = "target/classes/jdbc.properties";
 
     public final static String userProp = "jdbc.username";
     public final static String passwordProp = "jdbc.password";
