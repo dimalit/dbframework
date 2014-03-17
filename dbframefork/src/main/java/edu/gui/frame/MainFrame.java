@@ -10,6 +10,7 @@ import edu.gui.table.DataTableManager;
 
 import javax.sql.DataSource;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -21,12 +22,15 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
 
     JMenuBar menuBar;
     JButton loadTablesButton;
     JList tablesList;
+    JList historyList;
+    DataTable table;
 
     JPanel northButtonPanel;
     JPanel westListPanel;
@@ -144,19 +148,29 @@ public class MainFrame extends JFrame {
 
     private void createWestPanel() {
         westListPanel = new JPanel();
-        westListPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        westListPanel.setLayout(new BoxLayout(westListPanel, BoxLayout.PAGE_AXIS));
         this.getContentPane().add(westListPanel, BorderLayout.WEST);
+        createHistoryList();
         createTablesList();
-        westListPanel.add(tablesList);
     }
 
-    private void createTablePanel() {
-        centerTablePanel = new JPanel();
-        centerTablePanel.setLayout(new FlowLayout());
-        this.getContentPane().add(centerTablePanel, BorderLayout.CENTER);
+    private void createHistoryList() {
+        JLabel historyLabel = new JLabel("History");
+        historyList = new JList();
+        historyList.setBorder(BorderFactory.createLineBorder(Color.gray));
+        historyList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JScrollPane scrollPane = new JScrollPane(historyList);
+        scrollPane.setPreferredSize(new Dimension(100, 200));
+        //historyList.setSize(100,400);
+
+        westListPanel.add(historyLabel);
+        westListPanel.add(scrollPane);
+        //westListPanel.add(Box.createRigidArea(new Dimension(0, 20)));
     }
 
     private void createTablesList() {
+        JLabel tablesListLabel = new JLabel("Tables");
         tablesList = new JList();
         tablesList.setBorder(BorderFactory.createLineBorder(Color.gray));
         tablesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -168,12 +182,25 @@ public class MainFrame extends JFrame {
                     String selectedTable = (String) tablesList.getSelectedValue();
                     if (databaseManager.getDatabaseBean() != null) {
                         TableItem tableItem = databaseManager.getDatabaseBean().createTablesMap().get((selectedTable));
-                        DataTable table = new DataTable(new DataTableManager().getTableItemDataModel(tableItem));
+                        table.setDataTableModel(new DataTableManager().getTableItemDataModel(tableItem));
                         drawTable(table);
                     }
                 }
             }
         });
+
+        JScrollPane scrollPane = new JScrollPane(tablesList);
+        scrollPane.setPreferredSize(new Dimension(100, 400));
+
+        westListPanel.add(tablesListLabel);
+        westListPanel.add(scrollPane);
+    }
+
+    private void createTablePanel() {
+        table = new DataTable();
+        centerTablePanel = new JPanel();
+        centerTablePanel.setLayout(new FlowLayout());
+        this.getContentPane().add(centerTablePanel, BorderLayout.CENTER);
     }
 
     private void drawTable(JTable table) {

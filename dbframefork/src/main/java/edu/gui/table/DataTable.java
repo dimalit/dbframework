@@ -21,6 +21,14 @@ public class DataTable extends JTable {
     DatabaseManager databaseManager = new DatabaseManager();
     DataTableManager tableManager = new DataTableManager();
 
+    public DataTable() {
+        super();
+        this.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        this.setPreferredScrollableViewportSize(new Dimension(800, 600));
+        this.setFillsViewportHeight(true);
+        this.setBorder(BorderFactory.createLineBorder(Color.gray));
+    }
+
     public DataTable(DataTableModel tableModel) {
         super(tableModel);
         this.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
