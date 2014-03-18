@@ -27,7 +27,7 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="sqlBuilder" class="edu.dbframework.database.SqlQueryBuilder">
+    <bean id="sqlBuilder" class="edu.dbframework.database.SqlQueryBuilder" scope="singleton">
         <property name="metadataDao" ref="metadataDao"/>
     </bean>
 

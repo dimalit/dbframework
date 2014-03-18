@@ -28,6 +28,10 @@ public class Service {
         return dao.getData(sqlQueryBuilder.buildQueryForIncomingRelationByColumn(tableItem, primaryKeys, indexColumn));
     }
 
+    public Map<String, List<String>> getDataByQuery(String query) {
+        return dao.getData(query);
+    }
+
     public SqlQueryBuilder getSqlQueryBuilder() {
         return sqlQueryBuilder;
     }

@@ -1,6 +1,7 @@
 package edu.gui.frame;
 
 import edu.dbframework.database.MetadataDao;
+import edu.dbframework.database.SqlQueryBuilder;
 import edu.dbframework.parse.beans.DatabaseBean;
 import edu.dbframework.parse.beans.items.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
@@ -14,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +38,8 @@ public class MainFrame extends JFrame {
     JPanel westListPanel;
     static JPanel centerTablePanel;
 
-    private DatabaseManager databaseManager;
+    DatabaseManager databaseManager;
+    SqlQueryBuilder sqlBuilder = (SqlQueryBuilder) Main.context.getBean("sqlBuilder");
 
     public MainFrame() {
         super();
@@ -159,6 +162,15 @@ public class MainFrame extends JFrame {
         historyList = new JList();
         historyList.setBorder(BorderFactory.createLineBorder(Color.gray));
         historyList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        historyList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(e.getValueIsAdjusting()) {
+                    String value = (String) historyList.getSelectedValue();
+                    //table.setDataTableModel();
+                }
+            }
+        });
 
         JScrollPane scrollPane = new JScrollPane(historyList);
         scrollPane.setPreferredSize(new Dimension(100, 200));
@@ -197,7 +209,14 @@ public class MainFrame extends JFrame {
     }
 
     private void createTablePanel() {
-        table = new DataTable();
+        table = new DataTable() {
+            @Override
+            public void setDataTableModel(TableModel dataModel) {
+                super.setDataTableModel(dataModel);
+                MainFrame.this.historyList.removeAll();
+                MainFrame.this.historyList.setListData(sqlBuilder.getQueryQueue().keySet().toArray());
+            }
+        };
         centerTablePanel = new JPanel();
         centerTablePanel.setLayout(new FlowLayout());
         this.getContentPane().add(centerTablePanel, BorderLayout.CENTER);

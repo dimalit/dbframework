@@ -26,4 +26,8 @@ public class DataTableManager {
     public DataTableModel getInternalRelationDataModel(TableItem tableItem, List<String> primaryKeys, String indexColumn) {
         return new DataTableModel(tableItem, service.getDataByRelationColumn(tableItem, primaryKeys, indexColumn));
     }
+
+/*    public DataTableModel getDataModelBySqlAuery(String query) {
+        return new DataTableModel()
+    }*/
 }

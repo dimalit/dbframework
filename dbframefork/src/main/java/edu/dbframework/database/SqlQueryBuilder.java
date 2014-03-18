@@ -17,6 +17,7 @@ public class SqlQueryBuilder {
 
     private SelectQuery query;
     private MetadataDao metadataDao;
+
     private LinkedHashMap<String, String> queryQueue = new LinkedHashMap<String, String>();
 
     public SqlQueryBuilder() {
@@ -91,5 +92,9 @@ public class SqlQueryBuilder {
 
     public MetadataDao getMetadataDao() {
         return metadataDao;
+    }
+
+    public LinkedHashMap<String, String> getQueryQueue() {
+        return queryQueue;
     }
 }
