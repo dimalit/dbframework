@@ -9,38 +9,39 @@ import edu.dbframework.parse.beans.ColumnItem;
 import edu.dbframework.parse.beans.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlQueryBuilder {
 
     private SelectQuery query;
     private MetadataDao metadataDao;
 
-    private LinkedHashMap<String, String> queryQueue = new LinkedHashMap<String, String>();
+    private Map<String, TableHistoryBean> queryMap = new LinkedHashMap<String, TableHistoryBean>();
 
     public SqlQueryBuilder() {
     }
 
     public String buildQueryForTableItem(TableItem tableItem) {
         performSelectQuery(tableItem);
-        queryQueue.clear();
-        queryQueue.put(tableItem.getName(), query.validate().toString());
+        TableHistoryBean bean = new TableHistoryBean(tableItem, tableItem.getName(), query.validate().toString());
+        queryMap.clear();
+        queryMap.put(bean.getName(), bean);
         return query.validate().toString();
     }
 
     public String buildQueryForOutgoingRelationByRows(TableItem tableItem, List<String> rows, ColumnItem bindingColumn) {
         performSelectQuery(tableItem);
+        TableHistoryBean bean = new TableHistoryBean(tableItem, tableItem.getName() + " (outgoing rows)", query.toString());
         query.addCondition(new InCondition(new CustomSql(bindingColumn.getRelationTableName() + "." + bindingColumn.getRelationColumnName()), rows));
-        queryQueue.put(tableItem.getName() + " (outgoing rows)", query.validate().toString());
+        queryMap.put(bean.getName(), bean);
         return query.toString();
     }
 
     public String buildQueryForIncomingRelationByColumn(TableItem tableItem, List<String> primaryKeys, String relationColumn) {
         performSelectQuery(tableItem);
         query.addCondition(new InCondition(new CustomSql(tableItem.getName() + "." + relationColumn), primaryKeys));
-        queryQueue.put(tableItem.getName() + " (incoming rows)", query.validate().toString());
+        TableHistoryBean bean = new TableHistoryBean(tableItem, tableItem.getName() + " (incoming rows)", query.toString());
+        queryMap.put(bean.getName(), bean);
         return query.toString();
     }
 
@@ -94,7 +95,7 @@ public class SqlQueryBuilder {
         return metadataDao;
     }
 
-    public LinkedHashMap<String, String> getQueryQueue() {
-        return queryQueue;
+    public Map<String, TableHistoryBean> getQueryMap() {
+        return queryMap;
     }
 }

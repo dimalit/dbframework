@@ -3,7 +3,7 @@ package edu.dbframework;
 import edu.dbframework.database.Dao;
 import edu.dbframework.database.SqlQueryBuilder;
 import edu.dbframework.parse.beans.DatabaseBean;
-import edu.dbframework.parse.beans.items.TableItem;
+import edu.dbframework.parse.beans.TableItem;
 import edu.dbframework.parse.parsers.GenericParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

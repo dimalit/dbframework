@@ -27,7 +27,7 @@ public class DataTableManager {
         return new DataTableModel(tableItem, service.getDataByRelationColumn(tableItem, primaryKeys, indexColumn));
     }
 
-/*    public DataTableModel getDataModelBySqlAuery(String query) {
-        return new DataTableModel()
-    }*/
+    public DataTableModel getDataModelBySqlQuery(TableItem tableItem, String query) {
+        return new DataTableModel(tableItem, service.getDataByQuery(query));
+    }
 }

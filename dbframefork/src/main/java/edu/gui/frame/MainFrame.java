@@ -2,6 +2,7 @@ package edu.gui.frame;
 
 import edu.dbframework.database.MetadataDao;
 import edu.dbframework.database.SqlQueryBuilder;
+import edu.dbframework.database.TableHistoryBean;
 import edu.dbframework.parse.beans.DatabaseBean;
 import edu.dbframework.parse.beans.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
@@ -37,6 +38,7 @@ public class MainFrame extends JFrame {
     static JPanel centerTablePanel;
 
     DatabaseManager databaseManager;
+    DataTableManager dataTableManager = new DataTableManager();
     SqlQueryBuilder sqlBuilder = (SqlQueryBuilder) Main.context.getBean("sqlBuilder");
 
     public MainFrame() {
@@ -163,9 +165,11 @@ public class MainFrame extends JFrame {
         historyList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if(e.getValueIsAdjusting()) {
+                if(!e.getValueIsAdjusting() && historyList.getSelectedValue() != null) {
                     String value = (String) historyList.getSelectedValue();
-                    //table.setDataTableModel();
+                    TableHistoryBean bean = sqlBuilder.getQueryMap().get(value);
+                    table.setDataTableModel(dataTableManager.getDataModelBySqlQuery(bean.getTableItem(), bean.getQuery()));
+                    drawTable(table);
                 }
             }
         });
@@ -188,11 +192,11 @@ public class MainFrame extends JFrame {
 
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if (e.getValueIsAdjusting()) {
+                if (!e.getValueIsAdjusting()) {
                     String selectedTable = (String) tablesList.getSelectedValue();
                     if (databaseManager.getDatabaseBean() != null) {
                         TableItem tableItem = databaseManager.getDatabaseBean().createTablesMap().get((selectedTable));
-                        table.setDataTableModel(new DataTableManager().getTableItemDataModel(tableItem));
+                        table.setDataTableModel(dataTableManager.getTableItemDataModel(tableItem));
                         drawTable(table);
                     }
                 }
@@ -212,7 +216,7 @@ public class MainFrame extends JFrame {
             public void setDataTableModel(TableModel dataModel) {
                 super.setDataTableModel(dataModel);
                 MainFrame.this.historyList.removeAll();
-                MainFrame.this.historyList.setListData(sqlBuilder.getQueryQueue().keySet().toArray());
+                MainFrame.this.historyList.setListData(sqlBuilder.getQueryMap().keySet().toArray());
             }
         };
         centerTablePanel = new JPanel();

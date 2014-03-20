@@ -54,7 +54,6 @@ public class DataTable extends JTable {
         cellRenderer.setBackground(Color.LIGHT_GRAY);
 
         DataTableModel model = (DataTableModel) this.getModel();
-        final TableItem tableItem = model.getTableItem();
         final Map<Integer, ColumnItem> relationColumnsByIndex = model.getOutgoingColumnsByIndex();
 
         // different color for header
