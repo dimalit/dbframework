@@ -31,7 +31,7 @@
         <property name="metadataDao" ref="metadataDao"/>
     </bean>
 
-    <bean id="service" class="edu.dbframework.service.Service">
+    <bean id="service" class="edu.dbframework.database.Service">
         <property name="dao" ref="dao"/>
         <property name="sqlQueryBuilder" ref="sqlBuilder"/>
     </bean>

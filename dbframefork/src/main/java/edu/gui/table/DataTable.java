@@ -1,7 +1,7 @@
 package edu.gui.table;
 
-import edu.dbframework.parse.beans.items.ColumnItem;
-import edu.dbframework.parse.beans.items.TableItem;
+import edu.dbframework.parse.beans.ColumnItem;
+import edu.dbframework.parse.beans.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
 
 import javax.swing.*;

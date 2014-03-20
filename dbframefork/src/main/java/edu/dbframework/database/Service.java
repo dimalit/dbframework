@@ -1,9 +1,7 @@
-package edu.dbframework.service;
+package edu.dbframework.database;
 
-import edu.dbframework.database.Dao;
-import edu.dbframework.database.SqlQueryBuilder;
-import edu.dbframework.parse.beans.items.ColumnItem;
-import edu.dbframework.parse.beans.items.TableItem;
+import edu.dbframework.parse.beans.ColumnItem;
+import edu.dbframework.parse.beans.TableItem;
 
 import java.util.List;
 import java.util.Map;

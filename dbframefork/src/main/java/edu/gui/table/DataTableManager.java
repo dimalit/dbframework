@@ -1,9 +1,9 @@
 package edu.gui.table;
 
 
-import edu.dbframework.parse.beans.items.ColumnItem;
-import edu.dbframework.parse.beans.items.TableItem;
-import edu.dbframework.service.Service;
+import edu.dbframework.parse.beans.ColumnItem;
+import edu.dbframework.parse.beans.TableItem;
+import edu.dbframework.database.Service;
 import edu.gui.Main;
 
 import java.util.List;

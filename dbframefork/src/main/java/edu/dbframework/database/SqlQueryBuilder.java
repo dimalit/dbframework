@@ -5,8 +5,8 @@ import com.healthmarketscience.sqlbuilder.CustomSql;
 import com.healthmarketscience.sqlbuilder.FunctionCall;
 import com.healthmarketscience.sqlbuilder.InCondition;
 import com.healthmarketscience.sqlbuilder.SelectQuery;
-import edu.dbframework.parse.beans.items.ColumnItem;
-import edu.dbframework.parse.beans.items.TableItem;
+import edu.dbframework.parse.beans.ColumnItem;
+import edu.dbframework.parse.beans.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
 
 import java.util.LinkedHashMap;

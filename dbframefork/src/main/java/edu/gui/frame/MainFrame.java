@@ -3,7 +3,7 @@ package edu.gui.frame;
 import edu.dbframework.database.MetadataDao;
 import edu.dbframework.database.SqlQueryBuilder;
 import edu.dbframework.parse.beans.DatabaseBean;
-import edu.dbframework.parse.beans.items.TableItem;
+import edu.dbframework.parse.beans.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
 import edu.gui.Main;
 import edu.gui.table.DataTable;
@@ -11,7 +11,6 @@ import edu.gui.table.DataTableManager;
 
 import javax.sql.DataSource;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -24,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
 
