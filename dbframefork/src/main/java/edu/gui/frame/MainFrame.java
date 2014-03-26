@@ -204,7 +204,7 @@ public class MainFrame extends JFrame {
         });
 
         JScrollPane scrollPane = new JScrollPane(tablesList);
-        scrollPane.setPreferredSize(new Dimension(100, 400));
+        scrollPane.setPreferredSize(new Dimension(200, 400));
 
         westListPanel.add(tablesListLabel);
         westListPanel.add(scrollPane);
@@ -220,7 +220,7 @@ public class MainFrame extends JFrame {
             }
         };
         centerTablePanel = new JPanel();
-        centerTablePanel.setLayout(new FlowLayout());
+        centerTablePanel.setLayout(new GridLayout());
         this.getContentPane().add(centerTablePanel, BorderLayout.CENTER);
     }
 

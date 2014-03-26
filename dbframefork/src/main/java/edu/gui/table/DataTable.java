@@ -51,7 +51,7 @@ public class DataTable extends JTable {
     private void prepareExternalRelationsListener() {
         /* different color for outgoing relation column */
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
-        cellRenderer.setBackground(Color.LIGHT_GRAY);
+        cellRenderer.setBackground(Color.GREEN);
 
         DataTableModel model = (DataTableModel) this.getModel();
         final Map<Integer, ColumnItem> relationColumnsByIndex = model.getOutgoingColumnsByIndex();
@@ -91,7 +91,7 @@ public class DataTable extends JTable {
         if (this.getModel().getColumnCount() > tableItem.getColumns().size()) {
             /* different color for incoming relation columns */
             DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
-            cellRenderer.setBackground(Color.DARK_GRAY);
+            cellRenderer.setBackground(Color.YELLOW);
 
             List<Integer> relationColumnIndexes = model.getIncomingColumnIndexes();
             // different color for header
