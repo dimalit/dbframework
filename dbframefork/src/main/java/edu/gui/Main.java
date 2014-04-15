@@ -29,8 +29,4 @@ public class Main {
 			}
 		});
 	}
-
-    public static Object getBeanFromContext(String name) {
-        return context.getBean(name);
-    }
 }

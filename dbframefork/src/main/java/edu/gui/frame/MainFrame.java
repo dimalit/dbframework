@@ -27,36 +27,31 @@ import java.sql.SQLException;
 
 public class MainFrame extends JFrame {
 
-    JMenuBar menuBar;
-    JButton loadTablesButton;
-    JList tablesList;
-    JList historyList;
-    DataTable table;
+    static JMenuBar menuBar;
+    static JButton loadTablesButton;
+    static JList historyList;
+    static JList tablesList;
+    static DataTable table;
 
-    JPanel northButtonPanel;
-    JPanel westListPanel;
     static JPanel centerTablePanel;
 
-    DatabaseManager databaseManager;
-    DataTableManager dataTableManager = new DataTableManager();
-    SqlQueryBuilder sqlBuilder = (SqlQueryBuilder) Main.context.getBean("sqlBuilder");
+    static DatabaseManager databaseManager = new DatabaseManager();
+    static DataTableManager dataTableManager = new DataTableManager();
+    static SqlQueryBuilder sqlBuilder = (SqlQueryBuilder) Main.context.getBean("sqlBuilder");
 
     public MainFrame() {
         super();
         setTitle("DBFramework");
         setBounds(new Rectangle(100, 100, 800, 600));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new BorderLayout());
-
+        getContentPane().setLayout(new GridBagLayout());
         initialize();
     }
 
     private void initialize() {
-        databaseManager = new DatabaseManager();
         renderMenuBar();
-        createNorthPanel();
-        createWestPanel();
-        createTablePanel();
+        renderLists();
+        renderTable();
     }
 
     private void renderMenuBar() {
@@ -66,11 +61,8 @@ public class MainFrame extends JFrame {
         menu.setMnemonic(KeyEvent.VK_A);
         menuBar.add(menu);
 
-        JMenuItem menuItem = new JMenuItem("New Database Config",
-                KeyEvent.VK_T);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_1, ActionEvent.ALT_MASK));
-        final JMenuItem finalMenuItem = menuItem;
+        JMenuItem menuItem = new JMenuItem("New Database Config", KeyEvent.VK_T);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
         menuItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -95,16 +87,13 @@ public class MainFrame extends JFrame {
         });
         menu.add(menuItem);
 
-        menuItem = new JMenuItem("Open Database Config",
-                KeyEvent.VK_M);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_1, ActionEvent.ALT_MASK));
+        menuItem = new JMenuItem("Open Database Config", KeyEvent.VK_M);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fc = new JFileChooser();
-                FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
-                        "xml files (*.xml)", "xml");
+                FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter("xml files (*.xml)", "xml");
                 fc.setFileFilter(xmlfilter);
                 int returnVal = fc.showOpenDialog(MainFrame.this);
 
@@ -122,16 +111,13 @@ public class MainFrame extends JFrame {
         });
         menu.add(menuItem);
 
-        menuItem = new JMenuItem("New Connection",
-                KeyEvent.VK_T);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_2, ActionEvent.ALT_MASK));
+        menuItem = new JMenuItem("New Connection", KeyEvent.VK_T);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ConnectionDialog connectionDialog = new ConnectionDialog();
-                connectionDialog
-                        .setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                connectionDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 connectionDialog.setVisible(true);
             }
         });
@@ -140,32 +126,29 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(menuBar);
     }
 
-    private void createNorthPanel() {
-        northButtonPanel = new JPanel();
-        northButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        this.getContentPane().add(northButtonPanel,
-                BorderLayout.NORTH);
+    private void renderLists() {
+        loadTablesButton = new JButton("Load Tables");
+        loadTablesButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (databaseManager.getDatabaseBean() != null)
+                    tablesList.setListData(databaseManager.getDatabaseBean().tablesAsStringList().toArray());
+            }
+        });
+        this.getContentPane().add(loadTablesButton, new GridBagConstraints(1, 0, 1, 1, 3, 0,  GridBagConstraints.CENTER,
+                GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
 
-        refreshNorthPanel();
-    }
-
-    private void createWestPanel() {
-        westListPanel = new JPanel();
-        westListPanel.setLayout(new BoxLayout(westListPanel, BoxLayout.PAGE_AXIS));
-        this.getContentPane().add(westListPanel, BorderLayout.WEST);
-        createHistoryList();
-        createTablesList();
-    }
-
-    private void createHistoryList() {
+        // history list
         JLabel historyLabel = new JLabel("History");
+        this.getContentPane().add(historyLabel, new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.CENTER,
+                GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
+
         historyList = new JList();
         historyList.setBorder(BorderFactory.createLineBorder(Color.gray));
         historyList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         historyList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if(!e.getValueIsAdjusting() && historyList.getSelectedValue() != null) {
+                if (!e.getValueIsAdjusting() && historyList.getSelectedValue() != null) {
                     String value = (String) historyList.getSelectedValue();
                     TableHistoryBean bean = sqlBuilder.getQueryMap().get(value);
                     table.setDataTableModel(dataTableManager.getDataModelBySqlQuery(bean.getTableItem(), bean.getQuery()));
@@ -173,23 +156,19 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-
         JScrollPane scrollPane = new JScrollPane(historyList);
-        scrollPane.setPreferredSize(new Dimension(100, 200));
-        //historyList.setSize(100,400);
+        this.getContentPane().add(scrollPane, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 2, 2, 4, GridBagConstraints.CENTER,
+                GridBagConstraints.BOTH, new Insets(1, 1, 1, 1), 0, 0));
 
-        westListPanel.add(historyLabel);
-        westListPanel.add(scrollPane);
-        //westListPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-    }
-
-    private void createTablesList() {
+        // tables list
         JLabel tablesListLabel = new JLabel("Tables");
+        this.getContentPane().add(tablesListLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1, 1, GridBagConstraints.CENTER,
+                GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
+
         tablesList = new JList();
         tablesList.setBorder(BorderFactory.createLineBorder(Color.gray));
         tablesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablesList.addListSelectionListener(new ListSelectionListener() {
-
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
@@ -203,14 +182,12 @@ public class MainFrame extends JFrame {
             }
         });
 
-        JScrollPane scrollPane = new JScrollPane(tablesList);
-        scrollPane.setPreferredSize(new Dimension(200, 400));
-
-        westListPanel.add(tablesListLabel);
-        westListPanel.add(scrollPane);
+        scrollPane = new JScrollPane(tablesList);
+        this.getContentPane().add(scrollPane, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 2, 2, 6, GridBagConstraints.CENTER,
+                GridBagConstraints.BOTH, new Insets(1, 1, 1, 1), 0, 0));
     }
 
-    private void createTablePanel() {
+    private void renderTable() {
         table = new DataTable() {
             @Override
             public void setDataTableModel(TableModel dataModel) {
@@ -220,8 +197,8 @@ public class MainFrame extends JFrame {
             }
         };
         centerTablePanel = new JPanel();
-        centerTablePanel.setLayout(new GridLayout());
-        this.getContentPane().add(centerTablePanel, BorderLayout.CENTER);
+        this.getContentPane().add(centerTablePanel, new GridBagConstraints(1, 1, 1, 6, 10, 10, GridBagConstraints.CENTER,
+                GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
     }
 
     private void drawTable(JTable table) {
@@ -230,10 +207,9 @@ public class MainFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(centerTablePanel.getWidth(), centerTablePanel.getHeight()));
         centerTablePanel.add(scrollPane);
-        table.setVisible(true);
     }
 
-    private boolean isActiveConnection() {
+    private static boolean isActiveConnection() {
         DataSource dataSource = (DataSource) Main.context.getBean("dataSource");
         Connection connection = null;
         try {
@@ -244,7 +220,7 @@ public class MainFrame extends JFrame {
         return connection != null;
     }
 
-    public void refreshNorthPanel() {
+/*    public static void refreshNorthPanel() {
         northButtonPanel.removeAll();
         if (isActiveConnection()) {
             loadTablesButton = new JButton("Load Tables");
@@ -260,5 +236,5 @@ public class MainFrame extends JFrame {
             label.setText("There is no active connection. Please, configure it in file menu.");
             northButtonPanel.add(label);
         }
-    }
+    }*/
 }
