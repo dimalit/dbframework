@@ -29,6 +29,7 @@ public class MainFrame extends JFrame {
 
     static JMenuBar menuBar;
     static JButton loadTablesButton;
+    static JButton addPredicatsButton;
     static JList historyList;
     static JList tablesList;
     static DataTable table;
@@ -111,22 +112,19 @@ public class MainFrame extends JFrame {
         });
         menu.add(menuItem);
 
-        menuItem = new JMenuItem("New Connection", KeyEvent.VK_T);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ConnectionDialog connectionDialog = new ConnectionDialog();
-                connectionDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                connectionDialog.setVisible(true);
-            }
-        });
-        menu.add(menuItem);
-
         this.setJMenuBar(menuBar);
     }
 
     private void renderLists() {
+        addPredicatsButton = new JButton("Add Predicates");
+        addPredicatsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        this.getContentPane().add(addPredicatsButton, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.SOUTH,
+                GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
+
         loadTablesButton = new JButton("Load Tables");
         loadTablesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -134,7 +132,7 @@ public class MainFrame extends JFrame {
                     tablesList.setListData(databaseManager.getDatabaseBean().tablesAsStringList().toArray());
             }
         });
-        this.getContentPane().add(loadTablesButton, new GridBagConstraints(1, 0, 1, 1, 3, 0,  GridBagConstraints.CENTER,
+        this.getContentPane().add(loadTablesButton, new GridBagConstraints(1, 0, 0, 1, 1, 0, GridBagConstraints.CENTER,
                 GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
 
         // history list
@@ -197,6 +195,7 @@ public class MainFrame extends JFrame {
             }
         };
         centerTablePanel = new JPanel();
+        centerTablePanel.setPreferredSize(new Dimension(800, 600));
         this.getContentPane().add(centerTablePanel, new GridBagConstraints(1, 1, 1, 6, 10, 10, GridBagConstraints.CENTER,
                 GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
     }
@@ -205,7 +204,7 @@ public class MainFrame extends JFrame {
         centerTablePanel.removeAll();
         centerTablePanel.revalidate();
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(centerTablePanel.getWidth(), centerTablePanel.getHeight()));
+        scrollPane.setPreferredSize(centerTablePanel.getSize());
         centerTablePanel.add(scrollPane);
     }
 
