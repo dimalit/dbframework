@@ -10,8 +10,9 @@ public class ColumnItem {
 	private String relationTableName;
 	private String relationColumnName;
     private Boolean primaryKey;
+    private String predicate;
 
-	public ColumnItem() {
+    public ColumnItem() {
 	}
 
 	public String getName() {
@@ -52,6 +53,14 @@ public class ColumnItem {
 
     public void setPrimaryKey(Boolean primaryKey) {
         this.primaryKey = primaryKey;
+    }
+
+    public String getPredicate() {
+        return predicate;
+    }
+
+    public void setPredicate(String predicate) {
+        this.predicate = predicate;
     }
 
     @Override

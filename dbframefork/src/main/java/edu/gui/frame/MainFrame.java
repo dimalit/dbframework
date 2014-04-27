@@ -117,9 +117,12 @@ public class MainFrame extends JFrame {
 
     private void renderLists() {
         addPredicatsButton = new JButton("Add Predicates");
+        addPredicatsButton.setEnabled(false);
         addPredicatsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                PredicatesDialog predicatesDialog = new PredicatesDialog();
+                predicatesDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                predicatesDialog.setVisible(true);
             }
         });
         this.getContentPane().add(addPredicatsButton, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.SOUTH,
@@ -192,6 +195,7 @@ public class MainFrame extends JFrame {
                 super.setDataTableModel(dataModel);
                 MainFrame.this.historyList.removeAll();
                 MainFrame.this.historyList.setListData(sqlBuilder.getQueryMap().keySet().toArray());
+                addPredicatsButton.setEnabled(true);
             }
         };
         centerTablePanel = new JPanel();
