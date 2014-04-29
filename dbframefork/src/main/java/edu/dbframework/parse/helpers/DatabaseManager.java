@@ -35,4 +35,9 @@ public class DatabaseManager {
         this.parser.addBeanToXML(databaseBean);
         this.databaseBean = databaseBean;
     }
+
+    public void setParsingFile(File file) {
+        this.parser.setParsingFile(file);
+    }
+
 }

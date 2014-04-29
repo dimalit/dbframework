@@ -100,6 +100,7 @@ public class MainFrame extends JFrame {
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
+                    databaseManager.setParsingFile(file);
                     Desktop desktop = Desktop.getDesktop();
                     try {
                         desktop.open(file);

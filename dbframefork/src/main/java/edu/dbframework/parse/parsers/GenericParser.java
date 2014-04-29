@@ -54,7 +54,7 @@ public class GenericParser {
         return parsingFile;
     }
 
-    public void setParsingFile(String fileName) {
-        parsingFile = new File(fileName);
+    public void setParsingFile(File file) {
+        this.parsingFile = file;
     }
 }
