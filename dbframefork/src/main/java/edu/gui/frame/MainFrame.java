@@ -29,15 +29,15 @@ public class MainFrame extends JFrame {
 
     static JMenuBar menuBar;
     static JButton loadTablesButton;
-    static JButton addPredicatsButton;
+    static JButton addPredicatesButton;
     static JList historyList;
     static JList tablesList;
     static DataTable table;
 
     static JPanel centerTablePanel;
 
-    static DatabaseManager databaseManager = new DatabaseManager();
     static DataTableManager dataTableManager = new DataTableManager();
+    static DatabaseManager databaseManager = (DatabaseManager) Main.context.getBean("databaseManager");
     static SqlQueryBuilder sqlBuilder = (SqlQueryBuilder) Main.context.getBean("sqlBuilder");
 
     public MainFrame() {
@@ -116,16 +116,16 @@ public class MainFrame extends JFrame {
     }
 
     private void renderLists() {
-        addPredicatsButton = new JButton("Add Predicates");
-        addPredicatsButton.setEnabled(false);
-        addPredicatsButton.addActionListener(new ActionListener() {
+        addPredicatesButton = new JButton("Add Predicates");
+        addPredicatesButton.setEnabled(false);
+        addPredicatesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PredicatesDialog predicatesDialog = new PredicatesDialog();
                 predicatesDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 predicatesDialog.setVisible(true);
             }
         });
-        this.getContentPane().add(addPredicatsButton, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.SOUTH,
+        this.getContentPane().add(addPredicatesButton, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.SOUTH,
                 GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
 
         loadTablesButton = new JButton("Load Tables");
@@ -193,9 +193,9 @@ public class MainFrame extends JFrame {
             @Override
             public void setDataTableModel(TableModel dataModel) {
                 super.setDataTableModel(dataModel);
-                MainFrame.this.historyList.removeAll();
-                MainFrame.this.historyList.setListData(sqlBuilder.getQueryMap().keySet().toArray());
-                addPredicatsButton.setEnabled(true);
+                historyList.removeAll();
+                historyList.setListData(sqlBuilder.getQueryMap().keySet().toArray());
+                addPredicatesButton.setEnabled(true);
             }
         };
         centerTablePanel = new JPanel();

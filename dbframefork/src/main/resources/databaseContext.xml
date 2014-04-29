@@ -8,7 +8,7 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:property-placeholder location="jdbc.properties"/>
+    <context:property-placeholder location="classpath:jdbc.properties"/>
     <context:component-scan base-package="edu.gui" />
     <context:annotation-config />
 
@@ -36,5 +36,6 @@
         <property name="sqlQueryBuilder" ref="sqlBuilder"/>
     </bean>
 
+    <bean id="databaseManager" class="edu.dbframework.parse.helpers.DatabaseManager"/>
 
 </beans>
