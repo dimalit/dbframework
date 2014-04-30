@@ -3,9 +3,7 @@ package edu.gui.frame;
 import edu.dbframework.parse.beans.ColumnItem;
 import edu.dbframework.parse.beans.DatabaseBean;
 import edu.dbframework.parse.beans.TableItem;
-import edu.dbframework.parse.helpers.DatabaseManager;
-import edu.gui.Main;
-import edu.gui.table.DataTable;
+import edu.gui.table.DataTableManager;
 import edu.gui.table.DataTableModel;
 
 import javax.swing.*;
@@ -16,8 +14,6 @@ import java.util.*;
 import java.util.List;
 
 public class PredicatesDialog extends JDialog {
-
-    DatabaseManager databaseManager = new DatabaseManager();
 
     static JPanel panel;
     static ArrayList<JTextField> predicates;
@@ -32,11 +28,11 @@ public class PredicatesDialog extends JDialog {
     private void init() {
         panel = new JPanel(new GridBagLayout());
         predicates = new ArrayList<JTextField>(MainFrame.table.getColumnCount());
-        DataTableModel model = (DataTableModel) MainFrame.table.getModel();
         List<ColumnItem> columns = model.getTableItem().getColumns();
         for (int i = 0; i < columns.size(); i++) {
             JLabel label = new JLabel(columns.get(i).getName());
             JTextField field = new JTextField();
+            field.setText(columns.get(i).getPredicate() != null ? columns.get(i).getPredicate() : "");
             predicates.add(field);
             panel.add(label, new GridBagConstraints(0, i + 1, 1, 1, 0.3, 0, GridBagConstraints.EAST,
                     GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
@@ -67,14 +63,16 @@ public class PredicatesDialog extends JDialog {
     private class AddPredicatesMouseAdapter extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            DatabaseBean bean = databaseManager.getDatabaseBean();
+            DatabaseBean bean = MainFrame.databaseManager.getDatabaseBean();
             TableItem item = bean.getTableByName(model.getTableItem().getName());
             for (int i = 0; i < predicates.size(); i++) {
                 if (predicates.get(i).getText() != null) {
                     item.getColumns().get(i).setPredicate(predicates.get(i).getText());
                 }
             }
-            databaseManager.setDatabaseBean(bean);
+            MainFrame.databaseManager.setDatabaseBean(bean);
+            DataTableManager dtm = new DataTableManager();
+            MainFrame.table.setDataTableModel(dtm.getTableItemDataModel(item));
             PredicatesDialog.this.setVisible(false);
         }
     }

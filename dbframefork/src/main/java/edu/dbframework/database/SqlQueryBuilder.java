@@ -1,10 +1,6 @@
 package edu.dbframework.database;
 
-import com.healthmarketscience.sqlbuilder.BinaryCondition;
-import com.healthmarketscience.sqlbuilder.CustomSql;
-import com.healthmarketscience.sqlbuilder.FunctionCall;
-import com.healthmarketscience.sqlbuilder.InCondition;
-import com.healthmarketscience.sqlbuilder.SelectQuery;
+import com.healthmarketscience.sqlbuilder.*;
 import edu.dbframework.parse.beans.ColumnItem;
 import edu.dbframework.parse.beans.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
@@ -59,6 +55,9 @@ public class SqlQueryBuilder {
             } else {
                 query.addCustomColumns(new CustomSql(tableItem.getName() + "." + item.getName()));
             }
+            if (item.getPredicate() != null && item.getPredicate().length() > 0) {
+                query.addCondition(new CustomCondition(tableItem.getName() + "." + item.getName() + " " + item.getPredicate()));
+            }
         }
 
         if (extRefs.size() > 0) {
@@ -85,6 +84,9 @@ public class SqlQueryBuilder {
             /*-------Group by------*/
             query.addCustomGroupings(new CustomSql(tableItem.getName() + "." + tableItem.getColumns().get(0).getName()));
         }
+
+        /*-------Predicates------*/
+        //for (ColumnItem column : tableItem.getColumns())
     }
 
     public void setMetadataDao(MetadataDao metadataDao) {
