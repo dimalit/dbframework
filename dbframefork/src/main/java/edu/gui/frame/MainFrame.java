@@ -68,22 +68,14 @@ public class MainFrame extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 createTablesXMLFile();
-                openTablesXMLFile();
+                ConfigDialog cd = new ConfigDialog(databaseManager.getDatabaseBean());
+                cd.setVisible(true);
             }
 
             private void createTablesXMLFile() {
                 MetadataDao metadataDao = (MetadataDao) Main.context.getBean("metadataDao");
                 DatabaseBean xmlBean = metadataDao.createTablesXMLBean();
                 databaseManager.setDatabaseBean(xmlBean);
-            }
-
-            private void openTablesXMLFile() {
-                Desktop desktop = Desktop.getDesktop();
-                try {
-                    desktop.open(new File(Main.TABLES_XML));
-                } catch (IOException e1) {
-                    // exception-label
-                }
             }
         });
         menu.add(menuItem);
@@ -101,12 +93,8 @@ public class MainFrame extends JFrame {
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
                     databaseManager.setParsingFile(file);
-                    Desktop desktop = Desktop.getDesktop();
-                    try {
-                        desktop.open(file);
-                    } catch (IOException e1) {
-                        // exception-label
-                    }
+                    ConfigDialog cd = new ConfigDialog(databaseManager.getDatabaseBean());
+                    cd.setVisible(true);
                 }
 
             }
