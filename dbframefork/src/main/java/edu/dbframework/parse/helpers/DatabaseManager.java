@@ -40,4 +40,8 @@ public class DatabaseManager {
         this.parser.setParsingFile(file);
     }
 
+    public File getParsingFile() {
+        return parsingFile;
+    }
+
 }

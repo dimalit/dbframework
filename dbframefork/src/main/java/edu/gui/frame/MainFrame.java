@@ -20,15 +20,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class MainFrame extends JFrame {
 
     static JMenuBar menuBar;
-    static JButton loadTablesButton;
+    static JLabel messageLabel;
     static JButton addPredicatesButton;
     static JList historyList;
     static JList tablesList;
@@ -62,26 +61,16 @@ public class MainFrame extends JFrame {
         menu.setMnemonic(KeyEvent.VK_A);
         menuBar.add(menu);
 
-        JMenuItem menuItem = new JMenuItem("New Database Config", KeyEvent.VK_T);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
+        JMenuItem menuItem = new JMenuItem("Configure current database", KeyEvent.VK_T);
         menuItem.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
-                createTablesXMLFile();
                 ConfigDialog cd = new ConfigDialog(databaseManager.getDatabaseBean());
                 cd.setVisible(true);
-            }
-
-            private void createTablesXMLFile() {
-                MetadataDao metadataDao = (MetadataDao) Main.context.getBean("metadataDao");
-                DatabaseBean xmlBean = metadataDao.createTablesXMLBean();
-                databaseManager.setDatabaseBean(xmlBean);
             }
         });
         menu.add(menuItem);
 
-        menuItem = new JMenuItem("Open Database Config", KeyEvent.VK_M);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
+        menuItem = new JMenuItem("Load config from file", KeyEvent.VK_M);
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,7 +85,40 @@ public class MainFrame extends JFrame {
                     ConfigDialog cd = new ConfigDialog(databaseManager.getDatabaseBean());
                     cd.setVisible(true);
                 }
+            }
+        });
+        menu.add(menuItem);
 
+        menuItem = new JMenuItem("Save config", KeyEvent.CTRL_DOWN_MASK);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fc = new JFileChooser();
+                FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter("xml files (*.xml)", "xml");
+                fc.setFileFilter(xmlfilter);
+                fc.setCurrentDirectory(databaseManager.getParsingFile());
+                int returnVal = fc.showSaveDialog(MainFrame.this);
+
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        File savingFile = databaseManager.getParsingFile();
+
+                        InputStream in = new FileInputStream(savingFile);
+                        OutputStream out = new FileOutputStream(fc.getSelectedFile() + ".xml");
+                        int len;
+                        while ((len = in.read()) > 0) {
+                            out.write(len);
+                        }
+                        in.close();
+                        out.close();
+
+                    } catch (FileNotFoundException e1) {
+                        messageLabel.setText("Error with saving");
+                    } catch (IOException e1) {
+                        messageLabel.setText("Error with saving");
+                    }
+                }
             }
         });
         menu.add(menuItem);
@@ -117,14 +139,8 @@ public class MainFrame extends JFrame {
         this.getContentPane().add(addPredicatesButton, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.SOUTH,
                 GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
 
-        loadTablesButton = new JButton("Load Tables");
-        loadTablesButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (databaseManager.getDatabaseBean() != null)
-                    tablesList.setListData(databaseManager.getDatabaseBean().tablesAsStringList().toArray());
-            }
-        });
-        this.getContentPane().add(loadTablesButton, new GridBagConstraints(1, 0, 0, 1, 1, 0, GridBagConstraints.CENTER,
+        messageLabel = new JLabel();
+        this.getContentPane().add(messageLabel, new GridBagConstraints(1, 0, 0, 1, 1, 0, GridBagConstraints.CENTER,
                 GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
 
         // history list
@@ -171,10 +187,20 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-
         scrollPane = new JScrollPane(tablesList);
         this.getContentPane().add(scrollPane, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 2, 2, 6, GridBagConstraints.CENTER,
                 GridBagConstraints.BOTH, new Insets(1, 1, 1, 1), 0, 0));
+
+        if (isActiveConnection()) {
+            if (databaseManager.getDatabaseBean() == null) {
+                MetadataDao metadataDao = (MetadataDao) Main.context.getBean("metadataDao");
+                DatabaseBean xmlBean = metadataDao.createTablesXMLBean();
+                databaseManager.setDatabaseBean(xmlBean);
+            }
+            tablesList.setListData(databaseManager.getDatabaseBean().tablesAsStringList().toArray());
+        } else {
+            messageLabel.setText("There is no connection. Please, configure connection properties and restart application.");
+        }
     }
 
     private void renderTable() {
