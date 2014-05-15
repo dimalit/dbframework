@@ -26,8 +26,6 @@ public class DatabaseManager {
     }
 
     public DatabaseBean getDatabaseBean() {
-        if (!parser.getBeanFromXML(DatabaseBean.class).equals(this.databaseBean))
-            this.databaseBean = (DatabaseBean) parser.getBeanFromXML(DatabaseBean.class);
         return databaseBean;
     }
 
