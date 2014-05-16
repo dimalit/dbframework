@@ -237,22 +237,4 @@ public class MainFrame extends JFrame {
         }
         return connection != null;
     }
-
-/*    public static void refreshNorthPanel() {
-        northButtonPanel.removeAll();
-        if (isActiveConnection()) {
-            loadTablesButton = new JButton("Load Tables");
-            loadTablesButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if (databaseManager.getDatabaseBean() != null)
-                        tablesList.setListData(databaseManager.getDatabaseBean().tablesAsStringList().toArray());
-                }
-            });
-            northButtonPanel.add(loadTablesButton);
-        } else {
-            JLabel label = new JLabel();
-            label.setText("There is no active connection. Please, configure it in file menu.");
-            northButtonPanel.add(label);
-        }
-    }*/
 }

@@ -179,8 +179,15 @@ public class DataTable extends JTable {
                 break;
             }
         }
-        for (Integer row : selectedRows) {
-            keys.add(this.getValueAt(row, primaryKeyColumnIndex).toString());
+
+        if (selectedRows.length == 0) {
+            for (int i = 0; i < this.getRowCount(); i++) {
+                keys.add(this.getValueAt(i, primaryKeyColumnIndex).toString());
+            }
+        } else {
+            for (Integer row : selectedRows) {
+                keys.add(this.getValueAt(row, primaryKeyColumnIndex).toString());
+            }
         }
         return keys;
     }

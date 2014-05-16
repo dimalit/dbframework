@@ -9,8 +9,9 @@ public class ColumnItem {
 	private String alias;
 	private String relationTableName;
 	private String relationColumnName;
-    private Boolean primaryKey;
     private String predicate;
+
+    private Boolean primaryKey;
 
     public ColumnItem() {
 	}

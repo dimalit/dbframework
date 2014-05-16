@@ -73,6 +73,17 @@ public class ConfigDialog extends JDialog {
         centerPanel.removeAll();
         centerPanel.revalidate();
 
+        JLabel header = new JLabel("Alias");
+        centerPanel.add(header, new GridBagConstraints(1, 0, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+        header = new JLabel("Relation Table Name");
+        centerPanel.add(header, new GridBagConstraints(2, 0, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+        header = new JLabel("Relation Column Name");
+        centerPanel.add(header, new GridBagConstraints(3, 0, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+
+
         aliasFields = new ArrayList<JTextField>(tableItem.getColumns().size());
         relationTableFields = new ArrayList<JTextField>(tableItem.getColumns().size());
         relationColumnFields = new ArrayList<JTextField>(tableItem.getColumns().size());
@@ -94,13 +105,13 @@ public class ConfigDialog extends JDialog {
 
             JLabel columnNameLabel = new JLabel(column.getName());
 
-            centerPanel.add(columnNameLabel, new GridBagConstraints(0, i, 1, 1, 1, 0, GridBagConstraints.CENTER,
+            centerPanel.add(columnNameLabel, new GridBagConstraints(0, i + 1, 1, 1, 1, 0, GridBagConstraints.CENTER,
                     GridBagConstraints.NONE, new Insets(1, 1, 1, 1), 0, 0));
-            centerPanel.add(aliasField, new GridBagConstraints(1, i, 1, 1, 1, 0, GridBagConstraints.CENTER,
+            centerPanel.add(aliasField, new GridBagConstraints(1, i + 1, 1, 1, 1, 0, GridBagConstraints.CENTER,
                     GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-            centerPanel.add(relTableField, new GridBagConstraints(2, i, 1, 1, 1, 0, GridBagConstraints.CENTER,
+            centerPanel.add(relTableField, new GridBagConstraints(2, i + 1, 1, 1, 1, 0, GridBagConstraints.CENTER,
                     GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-            centerPanel.add(relColField, new GridBagConstraints(3, i, 1, 1, 1, 0, GridBagConstraints.CENTER,
+            centerPanel.add(relColField, new GridBagConstraints(3, i + 1, 1, 1, 1, 0, GridBagConstraints.CENTER,
                     GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
         }
 
