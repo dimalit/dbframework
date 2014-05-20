@@ -14,6 +14,8 @@ public class SqlQueryBuilder {
 
     private Map<String, TableHistoryBean> queryMap = new LinkedHashMap<String, TableHistoryBean>();
 
+    private DatabaseManager databaseManager;
+
     public SqlQueryBuilder() {
     }
 
@@ -43,7 +45,7 @@ public class SqlQueryBuilder {
 
     private void performSelectQuery(TableItem tableItem) {
         query = new SelectQuery();
-        Map<String, ColumnItem> extRefs = new DatabaseManager().getDatabaseBean().internalRelationsForTable(tableItem.getName());
+        Map<String, ColumnItem> extRefs = databaseManager.getDatabaseBean().internalRelationsForTable(tableItem.getName());
 
         /*-------Columns------*/
         for (ColumnItem item : tableItem.getColumns()) {
@@ -99,5 +101,9 @@ public class SqlQueryBuilder {
 
     public Map<String, TableHistoryBean> getQueryMap() {
         return queryMap;
+    }
+
+    public void setDatabaseManager(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
     }
 }

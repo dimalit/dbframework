@@ -3,6 +3,7 @@ package edu.gui.table;
 import edu.dbframework.parse.beans.ColumnItem;
 import edu.dbframework.parse.beans.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
+import edu.gui.Main;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 public class DataTable extends JTable {
 
-    DatabaseManager databaseManager = new DatabaseManager();
+    DatabaseManager databaseManager = (DatabaseManager) Main.context.getBean("databaseManager");
     DataTableManager tableManager = new DataTableManager();
 
     public DataTable() {
