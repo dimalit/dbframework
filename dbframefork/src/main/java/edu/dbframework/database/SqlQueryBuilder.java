@@ -29,8 +29,8 @@ public class SqlQueryBuilder {
 
     public String buildQueryForOutgoingRelationByRows(TableItem tableItem, List<String> rows, ColumnItem bindingColumn) {
         performSelectQuery(tableItem);
-        TableHistoryBean bean = new TableHistoryBean(tableItem, tableItem.getName() + " (outgoing rows)", query.toString());
         query.addCondition(new InCondition(new CustomSql(bindingColumn.getRelationTableName() + "." + bindingColumn.getRelationColumnName()), rows));
+        TableHistoryBean bean = new TableHistoryBean(tableItem, tableItem.getName() + " (outgoing rows)", query.toString());
         queryMap.put(bean.getName(), bean);
         return query.toString();
     }
