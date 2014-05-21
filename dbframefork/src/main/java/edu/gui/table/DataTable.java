@@ -13,6 +13,7 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +46,12 @@ public class DataTable extends JTable {
     }
 
     public void renderListeners() {
-        prepareInternalRelationsListeners();
-        prepareExternalRelationsListener();
+        removeAllListeners();
+        prepareIncomingRelationsListeners();
+        prepareOutgoingRelationsListener();
     }
 
-    private void prepareExternalRelationsListener() {
+    private void prepareOutgoingRelationsListener() {
         /* different color for outgoing relation column */
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setBackground(Color.GREEN);
@@ -84,7 +86,7 @@ public class DataTable extends JTable {
         });
     }
 
-    private void prepareInternalRelationsListeners() {
+    private void prepareIncomingRelationsListeners() {
 
         final DataTableModel model = (DataTableModel) this.getModel();
         final TableItem tableItem = model.getTableItem();
@@ -191,5 +193,11 @@ public class DataTable extends JTable {
             }
         }
         return keys;
+    }
+
+    private void removeAllListeners() {
+        for (MouseListener ml : this.getTableHeader().getMouseListeners()) {
+            this.getTableHeader().removeMouseListener(ml);
+        }
     }
 }
