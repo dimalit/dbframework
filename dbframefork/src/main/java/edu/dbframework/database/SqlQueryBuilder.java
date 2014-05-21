@@ -4,6 +4,8 @@ import com.healthmarketscience.sqlbuilder.*;
 import edu.dbframework.parse.beans.ColumnItem;
 import edu.dbframework.parse.beans.TableItem;
 import edu.dbframework.parse.helpers.DatabaseManager;
+import edu.gui.Main;
+import edu.gui.frame.MainFrame;
 
 import java.util.*;
 
@@ -13,8 +15,6 @@ public class SqlQueryBuilder {
     private MetadataDao metadataDao;
 
     private Map<String, TableHistoryBean> queryMap = new LinkedHashMap<String, TableHistoryBean>();
-
-    private DatabaseManager databaseManager;
 
     public SqlQueryBuilder() {
     }
@@ -45,13 +45,14 @@ public class SqlQueryBuilder {
 
     private void performSelectQuery(TableItem tableItem) {
         query = new SelectQuery();
-        Map<String, ColumnItem> extRefs = databaseManager.getDatabaseBean().internalRelationsForTable(tableItem.getName());
+        Map<String, ColumnItem> extRefs = Main.databaseManager.getDatabaseBean().internalRelationsForTable(tableItem.getName());
 
         /*-------Columns------*/
         for (ColumnItem item : tableItem.getColumns()) {
-            if (item.getAlias() != null && !item.getAlias().equals("")) {
+            if (item.getAlias() != null && item.getAlias().length() > 0) {
                 query.addCustomColumns(new CustomSql(tableItem.getName() + "." + item.getName() + " as " + item.getAlias()));
-            } else if (item.getRelationTableName() != null && item.getRelationColumnName() != null) {
+            } else if (item.getRelationTableName() != null && item.getRelationColumnName() != null
+                    && item.getRelationTableName().length() > 0 && item.getRelationColumnName().length() > 0) {
                 query.addCustomColumns(new CustomSql(item.getRelationTableName() + "." + item.getRelationColumnName()
                         + " as " + item.getName()));
             } else {
@@ -101,9 +102,5 @@ public class SqlQueryBuilder {
 
     public Map<String, TableHistoryBean> getQueryMap() {
         return queryMap;
-    }
-
-    public void setDatabaseManager(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
     }
 }

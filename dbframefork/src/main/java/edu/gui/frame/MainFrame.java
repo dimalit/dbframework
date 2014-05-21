@@ -17,9 +17,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -33,10 +31,9 @@ public class MainFrame extends JFrame {
     static JList tablesList;
     static DataTable table;
 
-    static JPanel centerTablePanel;
+    public static JPanel centerTablePanel;
 
     static DataTableManager dataTableManager = new DataTableManager();
-    static DatabaseManager databaseManager = (DatabaseManager) Main.context.getBean("databaseManager");
     static SqlQueryBuilder sqlBuilder = (SqlQueryBuilder) Main.context.getBean("sqlBuilder");
 
     public MainFrame() {
@@ -46,6 +43,17 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new GridBagLayout());
         initialize();
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                MainFrame.this.validate();
+                if (centerTablePanel.getComponents().length > 0) {
+                    centerTablePanel.getComponents()[0].setPreferredSize(centerTablePanel.getSize());
+                    centerTablePanel.revalidate();
+                }
+            }
+        });
     }
 
     private void initialize() {
@@ -64,7 +72,7 @@ public class MainFrame extends JFrame {
         JMenuItem menuItem = new JMenuItem("Configure current database", KeyEvent.VK_T);
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ConfigDialog cd = new ConfigDialog(databaseManager.getDatabaseBean());
+                ConfigDialog cd = new ConfigDialog(Main.databaseManager.getDatabaseBean());
                 cd.setVisible(true);
             }
         });
@@ -81,8 +89,8 @@ public class MainFrame extends JFrame {
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
-                    databaseManager.setParsingFile(file);
-                    ConfigDialog cd = new ConfigDialog(databaseManager.getDatabaseBean());
+                    Main.databaseManager.setParsingFile(file);
+                    ConfigDialog cd = new ConfigDialog(Main.databaseManager.getDatabaseBean());
                     cd.setVisible(true);
                 }
             }
@@ -97,12 +105,12 @@ public class MainFrame extends JFrame {
                 JFileChooser fc = new JFileChooser();
                 FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter("xml files (*.xml)", "xml");
                 fc.setFileFilter(xmlfilter);
-                fc.setCurrentDirectory(databaseManager.getParsingFile());
+                fc.setCurrentDirectory(Main.databaseManager.getParsingFile());
                 int returnVal = fc.showSaveDialog(MainFrame.this);
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     try {
-                        File savingFile = databaseManager.getParsingFile();
+                        File savingFile = Main.databaseManager.getParsingFile();
 
                         InputStream in = new FileInputStream(savingFile);
                         OutputStream out = new FileOutputStream(fc.getSelectedFile() + ".xml");
@@ -179,8 +187,8 @@ public class MainFrame extends JFrame {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
                     String selectedTable = (String) tablesList.getSelectedValue();
-                    if (databaseManager.getDatabaseBean() != null) {
-                        TableItem tableItem = databaseManager.getDatabaseBean().createTablesMap().get((selectedTable));
+                    if (Main.databaseManager.getDatabaseBean() != null) {
+                        TableItem tableItem = Main.databaseManager.getDatabaseBean().createTablesMap().get((selectedTable));
                         table.setDataTableModel(dataTableManager.getTableItemDataModel(tableItem));
                         drawTable(table);
                     }
@@ -192,12 +200,12 @@ public class MainFrame extends JFrame {
                 GridBagConstraints.BOTH, new Insets(1, 1, 1, 1), 0, 0));
 
         if (isActiveConnection()) {
-            if (databaseManager.getDatabaseBean() == null) {
+            if (Main.databaseManager.getDatabaseBean() == null) {
                 MetadataDao metadataDao = (MetadataDao) Main.context.getBean("metadataDao");
                 DatabaseBean xmlBean = metadataDao.createTablesXMLBean();
-                databaseManager.setDatabaseBean(xmlBean);
+                Main.databaseManager.setDatabaseBean(xmlBean);
             }
-            tablesList.setListData(databaseManager.getDatabaseBean().tablesAsStringList().toArray());
+            tablesList.setListData(Main.databaseManager.getDatabaseBean().tablesAsStringList().toArray());
         } else {
             messageLabel.setText("There is no connection. Please, configure connection properties and restart application.");
         }

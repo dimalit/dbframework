@@ -3,6 +3,7 @@ package edu.gui.frame;
 import edu.dbframework.parse.beans.ColumnItem;
 import edu.dbframework.parse.beans.DatabaseBean;
 import edu.dbframework.parse.beans.TableItem;
+import edu.gui.Main;
 import edu.gui.table.DataTableManager;
 import edu.gui.table.DataTableModel;
 
@@ -63,14 +64,14 @@ public class PredicatesDialog extends JDialog {
     private class AddPredicatesMouseAdapter extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            DatabaseBean bean = MainFrame.databaseManager.getDatabaseBean();
+            DatabaseBean bean = Main.databaseManager.getDatabaseBean();
             TableItem item = bean.getTableByName(model.getTableItem().getName());
             for (int i = 0; i < predicates.size(); i++) {
                 if (predicates.get(i).getText() != null) {
                     item.getColumns().get(i).setPredicate(predicates.get(i).getText());
                 }
             }
-            MainFrame.databaseManager.setDatabaseBean(bean);
+            Main.databaseManager.setDatabaseBean(bean);
             DataTableManager dtm = new DataTableManager();
             MainFrame.table.setDataTableModel(dtm.getTableItemDataModel(item));
             PredicatesDialog.this.setVisible(false);

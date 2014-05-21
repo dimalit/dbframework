@@ -3,6 +3,7 @@ package edu.gui.frame;
 import edu.dbframework.parse.beans.ColumnItem;
 import edu.dbframework.parse.beans.DatabaseBean;
 import edu.dbframework.parse.beans.TableItem;
+import edu.gui.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -153,17 +154,17 @@ public class ConfigDialog extends JDialog {
             String relationTableName = relationTableFields.get(i).getText();
             String relationColumnName = relationColumnFields.get(i).getText();
 
-            if (aliasValue != null && aliasValue.length() > 0) {
+            if (aliasValue != null) {
                 columnItem.setAlias(aliasValue);
             }
-            if (relationTableName != null && relationTableName.length() > 0) {
+            if (relationTableName != null) {
                 columnItem.setRelationTableName(relationTableName);
             }
-            if (relationColumnName != null && relationColumnName.length() > 0) {
+            if (relationColumnName != null) {
                 columnItem.setRelationColumnName(relationColumnName);
             }
         }
-        MainFrame.databaseManager.setDatabaseBean(databaseBean);
+        Main.databaseManager.setDatabaseBean(databaseBean);
     }
 
 }

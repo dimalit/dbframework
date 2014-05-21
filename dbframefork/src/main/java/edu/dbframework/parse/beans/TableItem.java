@@ -52,7 +52,8 @@ public class TableItem {
     public String[] relationColumnsAsStringArray() {
         List<String> relColumns = new ArrayList<String>();
         for (ColumnItem columnItem : columns) {
-            if (columnItem.getRelationTableName() != null && columnItem.getRelationColumnName() != null) {
+            if (columnItem.getRelationTableName() != null && columnItem.getRelationColumnName() != null
+                    && columnItem.getRelationTableName().length() > 0 && columnItem.getRelationColumnName().length() > 0) {
                 relColumns.add(columnItem.getRelationTableName() + "." + columnItem.getRelationColumnName());
             }
         }
@@ -62,7 +63,8 @@ public class TableItem {
     public List<ColumnItem> columnsWithRelationsAsList() {
         List<ColumnItem> relColumns = new ArrayList<ColumnItem>();
         for (ColumnItem columnItem : columns) {
-            if (columnItem.getRelationTableName() != null && columnItem.getRelationColumnName() != null) {
+            if (columnItem.getRelationTableName() != null && columnItem.getRelationColumnName() != null
+                    && columnItem.getRelationTableName().length() > 0 && columnItem.getRelationColumnName().length() > 0) {
                 relColumns.add(columnItem);
             }
         }
@@ -72,7 +74,8 @@ public class TableItem {
     public Map<String, String> relationColumnsAsMap() {
         HashMap<String, String> columns = new HashMap<String, String>();
         for (ColumnItem columnItem : this.columns) {
-            if (columnItem.getRelationTableName() != null && columnItem.getRelationColumnName() != null) {
+            if (columnItem.getRelationTableName() != null && columnItem.getRelationColumnName() != null
+                    && columnItem.getRelationTableName().length() > 0 && columnItem.getRelationColumnName().length() > 0) {
                 columns.put(columnItem.getRelationTableName(), columnItem.getRelationColumnName());
             }
         }

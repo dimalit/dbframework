@@ -31,7 +31,6 @@
 
     <bean id="sqlBuilder" class="edu.dbframework.database.SqlQueryBuilder" scope="singleton">
         <property name="metadataDao" ref="metadataDao"/>
-        <property name="databaseManager" ref="databaseManager"/>
     </bean>
 
     <bean id="service" class="edu.dbframework.database.Service">
