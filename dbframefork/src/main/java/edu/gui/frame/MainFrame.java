@@ -113,7 +113,11 @@ public class MainFrame extends JFrame {
                         File savingFile = Main.databaseManager.getParsingFile();
 
                         InputStream in = new FileInputStream(savingFile);
-                        OutputStream out = new FileOutputStream(fc.getSelectedFile() + ".xml");
+                        // append .xml if needed
+                        String out_name = fc.getSelectedFile().toString();
+                        if(!out_name.endsWith(".xml"))
+                        	out_name = out_name + ".xml";
+                        OutputStream out = new FileOutputStream(out_name);
                         int len;
                         while ((len = in.read()) > 0) {
                             out.write(len);
