@@ -56,7 +56,7 @@ public class DataTable extends JTable {
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
         cellRenderer.setBackground(Color.GREEN);
 
-        DataTableModel model = (DataTableModel) this.getModel();
+        final DataTableModel model = (DataTableModel) this.getModel();
         final Map<Integer, ColumnItem> relationColumnsByIndex = model.getOutgoingColumnsByIndex();
 
         // different color for header
@@ -71,15 +71,12 @@ public class DataTable extends JTable {
                 if (relationColumnsByIndex.containsKey(index)) {
                     int[] selectedRows = DataTable.this.getSelectedRows();
                     ColumnItem columnItem = relationColumnsByIndex.get(index);
-                    TableItem creatingTableItem = databaseManager.getDatabaseBean().getTableByName(columnItem.getRelationTableName());
+//                    TableItem creatingTableItem = databaseManager.getDatabaseBean().getTableByName(columnItem.getRelationTableName());
                     if (selectedRows.length >= 1) {
-                        List<String> rows = new ArrayList<String>();
-                        for (int i = 0; i < selectedRows.length; i++) {
-                            rows.add((String) getModel().getValueAt(selectedRows[i], index));
-                        }
-                        setDataTableModel(tableManager.getOutgoingRelationDataModel(creatingTableItem, rows, columnItem));
+                        List<String> rows = getSelectedPrimaryKeys();// new ArrayList<String>();
+                        setDataTableModel(tableManager.getOutgoingRelationDataModel(model.getTableItem(), rows, columnItem));
                     } else {
-                        setDataTableModel(tableManager.getTableItemDataModel(creatingTableItem));
+//!!!                        setDataTableModel(tableManager.getTableItemDataModel(creatingTableItem));
                     }
                 }
             }
