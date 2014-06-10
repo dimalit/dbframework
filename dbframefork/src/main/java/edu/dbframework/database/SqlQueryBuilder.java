@@ -60,7 +60,7 @@ public class SqlQueryBuilder {
                 query.addCustomColumns(new CustomSql(item.getRelationTableName() + "." + item.getRelationColumnName()
                         + " as " + alias));
             } else {
-                query.addCustomColumns(new CustomSql(tableItem.getName() + "." + alias));
+                query.addCustomColumns(new CustomSql(tableItem.getName() + "." + item.getName()));
             }
             if (item.getPredicate() != null && item.getPredicate().length() > 0) {
                 query.addCondition(new CustomCondition(tableItem.getName() + "." + item.getName() + " " + item.getPredicate()));
