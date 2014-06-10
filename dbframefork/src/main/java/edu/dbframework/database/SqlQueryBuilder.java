@@ -49,14 +49,18 @@ public class SqlQueryBuilder {
 
         /*-------Columns------*/
         for (ColumnItem item : tableItem.getColumns()) {
-            if (item.getAlias() != null && item.getAlias().length() > 0) {
-                query.addCustomColumns(new CustomSql(tableItem.getName() + "." + item.getName() + " as " + item.getAlias()));
-            } else if (item.getRelationTableName() != null && item.getRelationColumnName() != null
+        	// compute alias separately:
+        	String alias = item.getName();
+            if (item.getAlias() != null && item.getAlias().length() > 0)
+            	alias = item.getAlias();
+            
+            // now decide if relations or not:
+            if (item.getRelationTableName() != null && item.getRelationColumnName() != null
                     && item.getRelationTableName().length() > 0 && item.getRelationColumnName().length() > 0) {
                 query.addCustomColumns(new CustomSql(item.getRelationTableName() + "." + item.getRelationColumnName()
-                        + " as " + item.getName()));
+                        + " as " + alias));
             } else {
-                query.addCustomColumns(new CustomSql(tableItem.getName() + "." + item.getName()));
+                query.addCustomColumns(new CustomSql(tableItem.getName() + "." + alias));
             }
             if (item.getPredicate() != null && item.getPredicate().length() > 0) {
                 query.addCondition(new CustomCondition(tableItem.getName() + "." + item.getName() + " " + item.getPredicate()));
