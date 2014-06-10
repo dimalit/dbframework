@@ -116,7 +116,7 @@ public class DataTable extends JTable {
                     for (int i = columnCount; i < model.getColumnCount(); i++) {
                         if (getColumnModel().getSelectionModel().getLeadSelectionIndex() == i) {
                             // in incoming relations by default column name is table name7
-                            String tableName = DataTable.this.getColumnName(selectedColumn);
+                            String tableName = model.getTableNameForColumn(selectedColumn);// DataTable.this.getColumnName(selectedColumn);
                             TableItem relationTableItem = databaseManager.getDatabaseBean().getTableByName(tableName);
 
                             String relationColumnName = "";
@@ -143,7 +143,7 @@ public class DataTable extends JTable {
         });
     }
 
-    private void addHeaderListener(DataTableModel model, final TableItem tableItem) {
+    private void addHeaderListener(final DataTableModel model, final TableItem tableItem) {
         final List<Integer> incomingColumnIndexes = model.getIncomingColumnIndexes();
         this.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
@@ -152,7 +152,7 @@ public class DataTable extends JTable {
                 if (incomingColumnIndexes.contains(index))
                 {
                     List<String> selectedPrimaryKeys = getSelectedPrimaryKeys();
-                    String tableName = DataTable.this.getColumnName(index);
+                    String tableName = model.getTableNameForColumn(index);//DataTable.this.getColumnName(index);
                     TableItem relationTableItem = databaseManager.getDatabaseBean().getTableByName(tableName);
 
                     String relationColumnName = "";

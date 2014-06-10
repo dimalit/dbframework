@@ -42,6 +42,19 @@ public class DataTableModel extends AbstractTableModel {
         return columnNames.get(col);
     }
 
+	public String getTableNameForColumn(int col){
+		String needle = getColumnName(col);
+				
+		// 1st fin alias
+		for(ColumnItem ci: tableItem.getColumns()){
+			if(needle.equals(ci.getAlias()))
+				return ci.getName();
+		}// for
+		
+		// else fallback to name
+		return needle;
+	}
+	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		String column = this.columnNames.get(columnIndex);
