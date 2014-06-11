@@ -11,6 +11,7 @@ public class ColumnItem {
 	private String relationColumnName;
     private String predicate;
 
+    private Boolean isAbleForChart;
     private Boolean primaryKey;
 
     public ColumnItem() {
@@ -62,6 +63,14 @@ public class ColumnItem {
 
     public void setPredicate(String predicate) {
         this.predicate = predicate;
+    }
+
+    public Boolean getIsAbleForChart() {
+        return isAbleForChart;
+    }
+
+    public void setIsAbleForChart(Boolean isAbleForChart) {
+        this.isAbleForChart = isAbleForChart;
     }
 
     @Override

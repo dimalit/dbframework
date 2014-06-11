@@ -98,6 +98,17 @@ public class TableItem {
         return columnsMap;
     }
 
+    public Map<String, ColumnItem> columnsAbleForChartAsMap() {
+        HashMap<String, ColumnItem> columns = new HashMap<String, ColumnItem>();
+        for (ColumnItem columnItem : this.columns) {
+            if (columnItem.getIsAbleForChart() != null && columnItem.getIsAbleForChart()) {
+                columns.put(columnItem.getName(), columnItem);
+            }
+        }
+        return columns;
+    }
+
+
     public ColumnItem getColumnByName(String name) {
         return columnsAsMap().get(name);
     }

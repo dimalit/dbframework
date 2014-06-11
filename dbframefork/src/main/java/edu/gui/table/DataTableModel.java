@@ -91,4 +91,8 @@ public class DataTableModel extends AbstractTableModel {
         return columnNames;
     }
 
+    public Map<String, List<String>> getData() {
+        return data;
+    }
+
 }

@@ -1,6 +1,5 @@
 package edu.gui.frame;
 
-import edu.dbframework.parse.beans.TableItem;
 import edu.gui.table.DataTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -8,14 +7,28 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+
 
 public class ChartDialog extends JDialog {
 
     JPanel topPanel;
 
     JComboBox tableComboBox;
+    JTextField columnChartCount;
+    JButton drawChartButton;
 
     public ChartDialog() {
         this.getContentPane().setLayout(new BorderLayout());
@@ -26,21 +39,71 @@ public class ChartDialog extends JDialog {
 
     private void init() {
         DataTableModel model = (DataTableModel) MainFrame.table.getModel();
-        tableComboBox = new JComboBox(model.getColumnNames().toArray());
+        tableComboBox = new JComboBox(model.getTableItem().columnsAbleForChartAsMap().keySet().toArray());
+        columnChartCount = new JTextField();
+        columnChartCount.setColumns(5);
+        drawChartButton = new JButton("Draw Chart");
+        drawChartButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                drawChart();
+            }
+        });
 
-        topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        topPanel = new JPanel(new FlowLayout());
         topPanel.add(tableComboBox);
+        topPanel.add(columnChartCount);
+        topPanel.add(drawChartButton);
 
         this.getContentPane().add(topPanel, BorderLayout.NORTH);
+    }
 
-/*        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-        JFreeChart chart = ChartFactory.createBarChart("Comparison between Salesman",
-                "Salesman", "Profit", dataset, PlotOrientation.VERTICAL,
+    private void drawChart() {
+        JFreeChart chart = ChartFactory.createBarChart((String) tableComboBox.getSelectedItem(),
+                "Intervals", "Counts", createDataset(), PlotOrientation.VERTICAL,
                 false, true, false);
 
         ChartPanel panel = new ChartPanel(chart);
-        this.getContentPane().add(panel, BorderLayout.CENTER);*/
+        this.getContentPane().add(panel, BorderLayout.CENTER);
+        this.getContentPane().revalidate();
+    }
+
+    private DefaultCategoryDataset createDataset() {
+        DataTableModel model = (DataTableModel) MainFrame.table.getModel();
+        List<Integer> columnSet = new ArrayList<Integer>();
+        for (String value : model.getData().get(tableComboBox.getSelectedItem())) {
+            Float floatVal = new Float(value);
+            columnSet.add(Math.round(floatVal));
+        }
+        Collections.sort(columnSet);
+
+        Integer chartColumnsCount = null;
+        if (columnChartCount.getText().length() > 0) {
+            chartColumnsCount = new Integer(columnChartCount.getText());
+        } else {
+            chartColumnsCount = new Integer(10);
+        }
+
+        LinkedHashMap<String, Integer> datasetValues = new LinkedHashMap<String, Integer>();
+        int span = (columnSet.get(columnSet.size() - 1) - columnSet.get(0)) / chartColumnsCount;
+        int columnSetKey = 0;
+        for (int i = 1; i <= chartColumnsCount; i++) {
+            if (columnSetKey < columnSet.size()) {
+                int countInSpan = 0;
+                String chartColumnLabel = "" + columnSet.get(columnSetKey) + " - " + (columnSet.get(columnSetKey) + span);
+                int initialSpan = columnSet.get(columnSetKey) + span;
+                while (columnSetKey < columnSet.size() && columnSet.get(columnSetKey) < initialSpan) {
+                    countInSpan++;
+                    columnSetKey++;
+                }
+                datasetValues.put(chartColumnLabel, countInSpan);
+            }
+        }
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (String key : datasetValues.keySet()) {
+            dataset.setValue(datasetValues.get(key), "Counts", key);
+        }
+        return dataset;
     }
 
 }
