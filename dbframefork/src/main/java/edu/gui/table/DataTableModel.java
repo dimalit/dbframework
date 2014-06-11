@@ -87,4 +87,8 @@ public class DataTableModel extends AbstractTableModel {
         return result;
     }
 
+    public List<String> getColumnNames() {
+        return columnNames;
+    }
+
 }

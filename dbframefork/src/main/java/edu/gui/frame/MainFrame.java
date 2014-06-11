@@ -135,6 +135,30 @@ public class MainFrame extends JFrame {
         });
         menu.add(menuItem);
 
+        menu = new JMenu("Edit Table");
+        menuBar.add(menu);
+
+        menuItem = new JMenuItem("Add predicates");
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PredicatesDialog predicatesDialog = new PredicatesDialog();
+                predicatesDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                predicatesDialog.setVisible(true);
+            }
+        });
+        menu.add(menuItem);
+
+        menuItem = new JMenuItem("Show charts");
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ChartDialog cd = new ChartDialog();
+                cd.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                cd.setVisible(true);
+            }
+        });
+        menu.add(menuItem);
+
+
         this.setJMenuBar(menuBar);
     }
 
@@ -143,9 +167,7 @@ public class MainFrame extends JFrame {
         addPredicatesButton.setEnabled(false);
         addPredicatesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PredicatesDialog predicatesDialog = new PredicatesDialog();
-                predicatesDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                predicatesDialog.setVisible(true);
+
             }
         });
         this.getContentPane().add(addPredicatesButton, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.SOUTH,

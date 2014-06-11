@@ -7,8 +7,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 public class Main {
 
@@ -26,7 +24,7 @@ public class Main {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     MainFrame window = new MainFrame();
                     window.setVisible(true);
-				} catch (Exception e) {
+                } catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
