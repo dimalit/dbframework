@@ -39,7 +39,7 @@ public class ChartDialog extends JDialog {
 
     private void init() {
         DataTableModel model = (DataTableModel) MainFrame.table.getModel();
-        tableComboBox = new JComboBox(model.getTableItem().columnsAbleForChartAsMap().keySet().toArray());
+        tableComboBox = new JComboBox(model.getColumnsWithNumbers().toArray());
         columnChartCount = new JTextField();
         columnChartCount.setColumns(5);
         drawChartButton = new JButton("Draw Chart");
@@ -70,10 +70,10 @@ public class ChartDialog extends JDialog {
 
     private DefaultCategoryDataset createDataset() {
         DataTableModel model = (DataTableModel) MainFrame.table.getModel();
-        List<Integer> columnSet = new ArrayList<Integer>();
+        List<Float> columnSet = new ArrayList<Float>();
         for (String value : model.getData().get(tableComboBox.getSelectedItem())) {
             Float floatVal = new Float(value);
-            columnSet.add(Math.round(floatVal));
+            columnSet.add(floatVal);
         }
         Collections.sort(columnSet);
 
@@ -85,13 +85,13 @@ public class ChartDialog extends JDialog {
         }
 
         LinkedHashMap<String, Integer> datasetValues = new LinkedHashMap<String, Integer>();
-        int span = (columnSet.get(columnSet.size() - 1) - columnSet.get(0)) / chartColumnsCount;
+        float span = (columnSet.get(columnSet.size() - 1) - columnSet.get(0)) / chartColumnsCount;
         int columnSetKey = 0;
         for (int i = 1; i <= chartColumnsCount; i++) {
             if (columnSetKey < columnSet.size()) {
                 int countInSpan = 0;
                 String chartColumnLabel = "" + columnSet.get(columnSetKey) + " - " + (columnSet.get(columnSetKey) + span);
-                int initialSpan = columnSet.get(columnSetKey) + span;
+                float initialSpan = columnSet.get(columnSetKey) + span;
                 while (columnSetKey < columnSet.size() && columnSet.get(columnSetKey) < initialSpan) {
                     countInSpan++;
                     columnSetKey++;

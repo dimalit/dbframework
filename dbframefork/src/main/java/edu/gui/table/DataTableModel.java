@@ -4,10 +4,12 @@ import edu.dbframework.parse.beans.ColumnItem;
 import edu.dbframework.parse.beans.TableItem;
 
 import javax.swing.table.AbstractTableModel;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 public class DataTableModel extends AbstractTableModel {
@@ -91,6 +93,22 @@ public class DataTableModel extends AbstractTableModel {
         return columnNames;
     }
 
+    public List<String> getColumnsWithNumbers(){
+    	List<String> res = new ArrayList<String>();
+    	Set<String> cols = tableItem.columnsAsMap().keySet();
+    	
+    	// add cols not present on table - they are incoming links:
+    	for(String local_col: data.keySet()){
+    		if(!cols.contains(local_col))
+    			res.add(local_col);
+    	}
+    	
+    	// add cols explicitly marked as able for chart
+    	res.addAll(tableItem.columnsAbleForChartAsMap().keySet());
+    	
+    	return res;
+    }
+    
     public Map<String, List<String>> getData() {
         return data;
     }
