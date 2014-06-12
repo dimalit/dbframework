@@ -8,6 +8,7 @@ import edu.gui.Main;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.basic.BasicTableHeaderUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -146,8 +147,7 @@ public class DataTable extends JTable {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int index = convertColumnIndexToModel(columnAtPoint(e.getPoint()));
-                if (incomingColumnIndexes.contains(index))
-                {
+                if (incomingColumnIndexes.contains(index)) {
                     List<String> selectedPrimaryKeys = getSelectedPrimaryKeys();
                     String tableName = model.getTableNameForColumn(index);//DataTable.this.getColumnName(index);
                     TableItem relationTableItem = databaseManager.getDatabaseBean().getTableByName(tableName);
@@ -194,7 +194,8 @@ public class DataTable extends JTable {
 
     private void removeAllListeners() {
         for (MouseListener ml : this.getTableHeader().getMouseListeners()) {
-            this.getTableHeader().removeMouseListener(ml);
+            if (!(ml  instanceof BasicTableHeaderUI.MouseInputHandler))
+                this.getTableHeader().removeMouseListener(ml);
         }
     }
 }
